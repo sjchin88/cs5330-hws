@@ -1,0 +1,11 @@
+D:/OneDrive/NEU/CS5330 Computer Vision/cs5330-hws/Test_Spaces/build/CMakeFiles/Experimental.dir
+D:/OneDrive/NEU/CS5330 Computer Vision/cs5330-hws/Test_Spaces/build/CMakeFiles/Nightly.dir
+D:/OneDrive/NEU/CS5330 Computer Vision/cs5330-hws/Test_Spaces/build/CMakeFiles/Continuous.dir
+D:/OneDrive/NEU/CS5330 Computer Vision/cs5330-hws/Test_Spaces/build/CMakeFiles/NightlyMemoryCheck.dir
+D:/OneDrive/NEU/CS5330 Computer Vision/cs5330-hws/Test_Spaces/build/CMakeFiles/Testrun1.dir
+D:/OneDrive/NEU/CS5330 Computer Vision/cs5330-hws/Test_Spaces/build/CMakeFiles/Tu_display_img.dir
+D:/OneDrive/NEU/CS5330 Computer Vision/cs5330-hws/Test_Spaces/build/CMakeFiles/Tu_video.dir
+D:/OneDrive/NEU/CS5330 Computer Vision/cs5330-hws/Test_Spaces/build/CMakeFiles/PACKAGE.dir
+D:/OneDrive/NEU/CS5330 Computer Vision/cs5330-hws/Test_Spaces/build/CMakeFiles/RUN_TESTS.dir
+D:/OneDrive/NEU/CS5330 Computer Vision/cs5330-hws/Test_Spaces/build/CMakeFiles/ALL_BUILD.dir
+D:/OneDrive/NEU/CS5330 Computer Vision/cs5330-hws/Test_Spaces/build/CMakeFiles/ZERO_CHECK.dir
