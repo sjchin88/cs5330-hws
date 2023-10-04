@@ -4,11 +4,22 @@
     <ClCompile Include="D:\OneDrive\NEU\CS5330 Computer Vision\cs5330-hws\Project1\imgDisplay.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="D:\OneDrive\NEU\CS5330 Computer Vision\cs5330-hws\Project1\filters.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="D:\OneDrive\NEU\CS5330 Computer Vision\cs5330-hws\Project1\filters.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <CustomBuild Include="D:\OneDrive\NEU\CS5330 Computer Vision\cs5330-hws\Project1\CMakeLists.txt" />
   </ItemGroup>
   <ItemGroup>
+    <Filter Include="Header Files">
+      <UniqueIdentifier>{2B56CB4F-8F58-3848-8F20-50F86AE327D3}</UniqueIdentifier>
+    </Filter>
     <Filter Include="Source Files">
       <UniqueIdentifier>{B6478EA0-1869-38E4-B162-5D2F5D688D5A}</UniqueIdentifier>
     </Filter>

@@ -318,6 +318,8 @@ if %errorlevel% neq 0 goto :VCEnd</Command>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="D:\OneDrive\NEU\CS5330 Computer Vision\cs5330-hws\Project1\imgDisplay.cpp" />
+    <ClInclude Include="D:\OneDrive\NEU\CS5330 Computer Vision\cs5330-hws\Project1\filters.h" />
+    <ClCompile Include="D:\OneDrive\NEU\CS5330 Computer Vision\cs5330-hws\Project1\filters.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="D:\OneDrive\NEU\CS5330 Computer Vision\cs5330-hws\Project1\build\ZERO_CHECK.vcxproj">

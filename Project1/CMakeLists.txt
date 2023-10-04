@@ -8,7 +8,7 @@ set(OpenCV_DIR "C:/opencv/build")
 find_package( OpenCV REQUIRED )
 include_directories( ${OpenCV_INCLUDE_DIRS} )
 
-add_executable(imgDisplay imgDisplay.cpp)
+add_executable(imgDisplay imgDisplay.cpp filters.h filters.cpp)
 target_link_libraries( imgDisplay ${OpenCV_LIBS} )
 
 add_executable(vidDisplay vidDisplay.cpp filters.h filters.cpp)

@@ -258,6 +258,12 @@ MEMORYCHECK_COMMAND:FILEPATH=C:/Program Files/NVIDIA GPU Computing Toolkit/CUDA/
 //File that contains suppressions for the memory checker
 MEMORYCHECK_SUPPRESSIONS_FILE:FILEPATH=
 
+//No help, variable specified on the command line.
+OPTIONA:UNINITIALIZED=ON
+
+//No help, variable specified on the command line.
+OPTIONB:UNINITIALIZED=ON
+
 //Name of the computer/site where compile is being run
 SITE:STRING=ChinSJ-PC
 
