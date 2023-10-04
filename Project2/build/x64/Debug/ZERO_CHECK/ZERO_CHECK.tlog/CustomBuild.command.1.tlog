@@ -1,0 +1,10 @@
+^D:\ONEDRIVE\NEU\CS5330 COMPUTER VISION\CS5330-HWS\PROJECT2\BUILD\CMAKEFILES\22792A7C90D3F86569F2D3BCF46406B5\GENERATE.STAMP.RULE
+setlocal
+"C:\Program Files\CMake\bin\cmake.exe" "-SD:/OneDrive/NEU/CS5330 Computer Vision/cs5330-hws/Project2" "-BD:/OneDrive/NEU/CS5330 Computer Vision/cs5330-hws/Project2/build" --check-stamp-list CMakeFiles/generate.stamp.list --vs-solution-file "D:/OneDrive/NEU/CS5330 Computer Vision/cs5330-hws/Project2/build/testrun.sln"
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal & call :cmErrorLevel %errorlevel% & goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd

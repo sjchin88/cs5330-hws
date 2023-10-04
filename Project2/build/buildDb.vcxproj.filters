@@ -1,0 +1,45 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="17.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <ClCompile Include="D:\OneDrive\NEU\CS5330 Computer Vision\cs5330-hws\Project2\buildDb.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="D:\OneDrive\NEU\CS5330 Computer Vision\cs5330-hws\Project2\csv_util.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="D:\OneDrive\NEU\CS5330 Computer Vision\cs5330-hws\Project2\filters.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="D:\OneDrive\NEU\CS5330 Computer Vision\cs5330-hws\Project2\utils.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="D:\OneDrive\NEU\CS5330 Computer Vision\cs5330-hws\Project2\featureCalcs.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="D:\OneDrive\NEU\CS5330 Computer Vision\cs5330-hws\Project2\csv_util.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\OneDrive\NEU\CS5330 Computer Vision\cs5330-hws\Project2\filters.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\OneDrive\NEU\CS5330 Computer Vision\cs5330-hws\Project2\utils.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\OneDrive\NEU\CS5330 Computer Vision\cs5330-hws\Project2\featureCalcs.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <CustomBuild Include="D:\OneDrive\NEU\CS5330 Computer Vision\cs5330-hws\Project2\CMakeLists.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="Header Files">
+      <UniqueIdentifier>{9AD5FD1E-B3E4-3A41-83A4-868B04007B69}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{94F473D7-5326-3646-9536-5B657FC804B7}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+</Project>
