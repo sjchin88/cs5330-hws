@@ -22,8 +22,14 @@ add_executable(searchImg searchImg.cpp
     utils.h utils.cpp 
     featureCalcs.h featureCalcs.cpp
     distMetrics.h distMetrics.cpp
+    searchDb.h searchDb.cpp
 )
 target_link_libraries( searchImg ${OpenCV_LIBS} )
+
+add_executable(imgDisplay imgDisplay.cpp 
+    filters.h filters.cpp 
+)
+target_link_libraries( imgDisplay ${OpenCV_LIBS} )
 
 set(CPACK_PROJECT_NAME ${PROJECT_NAME})
 set(CPACK_PROJECT_VERSION ${PROJECT_VERSION})

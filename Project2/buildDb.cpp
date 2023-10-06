@@ -14,6 +14,8 @@
 #include <opencv2/highgui.hpp>
 #include <opencv2/core/types.hpp>
 #include <opencv2/imgproc.hpp>
+#include <chrono>
+#include <ctime>
 #include "utils.h"
 #include "featureCalcs.h"
 #include "csv_util.h"
@@ -25,11 +27,10 @@ using namespace cv;
  * Helper function to compute the feature vectors and append it to save csv
  * according to selectedIdx
  */
-int computeNSave(vector<string> &imageList, char *outputName, int selectedIdx);
+int computeNSave(vector<string> &imageList, char *outputName, int selectedIdx, float zoomFactor);
 
 /*
   Given a directory on the command line, scans through the directory for image files.
-
   Compute the feature vectors based on chosen method,
   and store the feature vectors in an output csv file
  */
@@ -42,7 +43,8 @@ int main(int argc, char *argv[])
         exit(EXIT_FAILURE);
     }
     // Getting the variables from command line
-    // argv[1] = image database, argv[2] = defaultSavePath, argv[3] = feature option
+    // argv[1] = image database, argv[2] = defaultSavePath, argv[3] = feature option, argv[4] = zoom factor
+    // parse for image database directory from argv[1]
     char dirname[256];
     try
     {
@@ -54,12 +56,9 @@ int main(int argc, char *argv[])
         exit(EXIT_FAILURE);
     }
 
-    // Parse the output directory for save file
+    // Parse the output directory for save file from argv[2]
     char outputName[256];
     string saveDir;
-    // get the directory path
-    // string saveDir = "C:/CS5330_Assets/olympus/";
-    // strcpy(dirname, saveDir.c_str());
     try
     {
         saveDir = argv[2];
@@ -70,7 +69,7 @@ int main(int argc, char *argv[])
         exit(EXIT_FAILURE);
     }
 
-    // Parse the option
+    // Parse the feature option from argv[3]
     int selectedIdx;
     try
     {
@@ -82,14 +81,28 @@ int main(int argc, char *argv[])
         exit(EXIT_FAILURE);
     }
 
-    /*
-     * Default selection for feature computation is baseline 'b'
-     * Other valid selections include 'h' for Histogram Matching
-     * 'm' for multi-histogram matching
-     * 't' for texture matching
-     */
-    // char selection;
+    // Parse the zoom factor if selectedIdx is 5 or 7 from argv[4]
+    float zoomFactor = 0;
+    if (selectedIdx == 5 || selectedIdx == 7)
+    {
+        if (argc < 5)
+        {
+            printf("missing zoom factor");
+            printf("usage: %s <image directory path> <csv output directory> <feature option> <zoom factor>\n", argv[0]);
+            exit(EXIT_FAILURE);
+        }
+        try
+        {
+            zoomFactor = stof(argv[4]);
+        }
+        catch (std::exception)
+        {
+            std::cout << "Error parsing zoom factor " << std::endl;
+            exit(EXIT_FAILURE);
+        }
+    }
 
+    // Update outputName for csv file based on chosen method option
     string saveFileName;
     switch (selectedIdx)
     {
@@ -105,91 +118,143 @@ int main(int argc, char *argv[])
     case 4:
         saveFileName = saveDir + "colorNTextureHist.csv";
         break;
+    // For part 5, zoom img with whole texture based on gradient magnitude image
+    case 5:
+        saveFileName = saveDir + "zoomColorNTextHist.csv";
+        break;
+    // For part 5, img with whole texture based on gabor filtered image
+    case 6:
+        saveFileName = saveDir + "ColorNGaborHist.csv";
+        break;
+    // For part 5, zoom img with whole texture based on gabor filtered image
+    case 7:
+        saveFileName = saveDir + "zoomColorNGaborHist.csv";
+        break;
     default:
         break;
     }
-
     strcpy(outputName, saveFileName.c_str());
 
     // call the util function to read in all image file names
     vector<string> imgList;
-    readImgFiles(dirname, imgList);
-    computeNSave(imgList, outputName, selectedIdx);
+    if (readImgFiles(dirname, imgList) != 0)
+    {
+        exit(EXIT_FAILURE);
+    };
+    // pass to helper method
+    computeNSave(imgList, outputName, selectedIdx, zoomFactor);
 
     exit(EXIT_SUCCESS);
 }
 
-int computeNSave(vector<string> &imageList, char *outputName, int selectedIdx)
+/**
+ * Helper function to compute the feature vectors and append it to save csv
+ * according to selectedIdx
+ */
+int computeNSave(vector<string> &imageList, char *outputName, int selectedIdx, float zoomFactor)
 {
+    // only selectedIdx == 1 use int feature vectors
+    // the rest are float
+    bool isFloat = selectedIdx == 1 ? false : true;
+
     // Loop trough each image and compute the feature
     for (string fname : imageList)
     {
         cv::Mat img = imread(fname);
         char imgFname[256];
         strcpy(imgFname, fname.c_str());
+        vector<int> featuresVecInt;
+        vector<float> featuresVecFloat;
 
         switch (selectedIdx)
         {
         case 1:
         {
-            vector<int> featuresVec;
-            if (calcBaseline(img, featuresVec) != 0)
+            if (calcBaseline(img, featuresVecInt) != 0)
             {
                 cout << "Error in computing feature vectors for" << imgFname << endl;
                 break;
             }
-            if (append_image_data_csv(outputName, imgFname, featuresVec, 0) != 0)
-            {
-                cout << "Error in writing feature vectors to csv for " << imgFname << endl;
-                break;
-            }
+
             break;
         }
         case 2:
         {
-            vector<float> featuresVec;
-            if (calcRGHist(img, featuresVec, 16) != 0)
+            if (calcRGHist(img, featuresVecFloat, 16) != 0)
             {
                 cout << "Error in computing feature vectors for" << imgFname << endl;
-                break;
-            }
-            if (append_image_data_csv(outputName, imgFname, featuresVec, 0) != 0)
-            {
-                cout << "Error in writing feature vectors to csv for " << imgFname << endl;
                 break;
             }
             break;
         }
         case 3:
         {
-            vector<float> featuresVec;
-            if (calcMultiHistLR(img, featuresVec, 16) != 0)
+            if (calcMultiHistLR(img, featuresVecFloat, 16) != 0)
             {
                 cout << "Error in computing feature vectors for" << imgFname << endl;
-                break;
-            }
-            if (append_image_data_csv(outputName, imgFname, featuresVec, 0) != 0)
-            {
-                cout << "Error in writing feature vectors to csv for " << imgFname << endl;
                 break;
             }
             break;
         }
         case 4:
         {
-            vector<float> featuresVec;
-            if (calcRGBNTexture(img, featuresVec) != 0)
+            if (calcRGBNTexture(img, featuresVecFloat) != 0)
             {
                 cout << "Error in computing feature vectors for" << imgFname << endl;
                 break;
             }
-            if (append_image_data_csv(outputName, imgFname, featuresVec, 0) != 0)
+            break;
+        }
+        case 5:
+        {
+            if (calcRGBNTexture(img, featuresVecFloat, zoomFactor) != 0)
             {
-                cout << "Error in writing feature vectors to csv for " << imgFname << endl;
+                cout << "Error in computing feature vectors for" << imgFname << endl;
                 break;
             }
             break;
         }
+        case 6:
+        {
+            if (calcRGBNGabor(img, featuresVecFloat, false) != 0)
+            {
+                cout << "Error in computing feature vectors for" << imgFname << endl;
+                break;
+            }
+            break;
+        }
+        case 7:
+        {
+            // auto start = std::chrono::system_clock::now();
+            if (calcRGBNGabor(img, featuresVecFloat, zoomFactor) != 0)
+            {
+                cout << "Error in computing feature vectors for" << imgFname << endl;
+                break;
+            }
+            // Debug timing code
+            /* auto end = std::chrono::system_clock::now();
+             std::chrono::duration<double> elapsed_seconds = end - start;
+             std::cout << "elapsed time for image " << fname << ":" << elapsed_seconds.count() << "s"
+                      << std::endl; */
+
+            break;
+        }
+        default:
+            break;
+        }
+        if (isFloat)
+        {
+            if (append_image_data_csv(outputName, imgFname, featuresVecFloat, 0) != 0)
+            {
+                cout << "Error in writing feature vectors to csv for " << imgFname << endl;
+            }
+        }
+        else
+        {
+            if (append_image_data_csv(outputName, imgFname, featuresVecInt, 0) != 0)
+            {
+                cout << "Error in writing feature vectors to csv for " << imgFname << endl;
+            }
         }
     }
     return 0;

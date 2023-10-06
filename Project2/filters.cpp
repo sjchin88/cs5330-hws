@@ -384,3 +384,68 @@ int negative(cv::Mat &src, cv::Mat &dst)
         return 1;
     }
 }
+
+/**
+ * Helper function to get all combinations of the gabor filters
+ */
+int buildFilter(cv::Size &ksize, vector<float> &sigmas, vector<float> &thetas, vector<float> &lambdas, vector<float> &gammas, vector<cv::Mat> &gaborKernels)
+{
+    try
+    {
+        for (float sigma : sigmas)
+        {
+            for (float theta : thetas)
+            {
+                for (float lambda : lambdas)
+                {
+                    for (float gamma : gammas)
+                    {
+                        cv::Mat gaborKernel = cv::getGaborKernel(ksize, sigma, theta, lambda, gamma, 0);
+                        gaborKernel = gaborKernel / (1.5 * cv::sum(gaborKernel)); // Normalize the gaborKernel
+                        gaborKernels.push_back(gaborKernel);
+                    }
+                }
+            }
+        }
+    }
+    catch (exception)
+    {
+        return (-1);
+    }
+    return 0;
+}
+/**
+ * Create a gabor filtered images based on gabor filters parameters of
+ * ksize and
+ * sigmas, thetas, lambdas and gammas,
+ * note these four parameters are loops thus if you have
+ * 2 of each, total of 16 gabor filter will be created and used to filter the image
+ */
+int gaborFiltering(cv::Mat &src, cv::Mat &dst, cv::Size &ksize, vector<float> &sigmas, vector<float> &thetas, vector<float> &lambdas, vector<float> &gammas)
+{
+    try
+    {
+        vector<cv::Mat> gaborKernels;
+
+        if (buildFilter(ksize, sigmas, thetas, lambdas, gammas, gaborKernels) != 0)
+        {
+            return (-1);
+        }
+
+        // Now process the image
+        dst = Mat::zeros(src.size(), CV_8UC3);
+        // Loop through each kernel and update the max output
+        // from the filter
+        cv::Mat tempMat;
+        for (Mat kernel : gaborKernels)
+        {
+            cv::filter2D(src, tempMat, src.depth(), kernel);
+            cv::max(dst, tempMat, dst);
+        }
+    }
+    catch (exception)
+    {
+        return (-1);
+    }
+    return 0;
+}

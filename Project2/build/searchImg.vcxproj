@@ -328,6 +328,8 @@ if %errorlevel% neq 0 goto :VCEnd</Command>
     <ClCompile Include="D:\OneDrive\NEU\CS5330 Computer Vision\cs5330-hws\Project2\featureCalcs.cpp" />
     <ClInclude Include="D:\OneDrive\NEU\CS5330 Computer Vision\cs5330-hws\Project2\distMetrics.h" />
     <ClCompile Include="D:\OneDrive\NEU\CS5330 Computer Vision\cs5330-hws\Project2\distMetrics.cpp" />
+    <ClInclude Include="D:\OneDrive\NEU\CS5330 Computer Vision\cs5330-hws\Project2\searchDb.h" />
+    <ClCompile Include="D:\OneDrive\NEU\CS5330 Computer Vision\cs5330-hws\Project2\searchDb.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="D:\OneDrive\NEU\CS5330 Computer Vision\cs5330-hws\Project2\build\ZERO_CHECK.vcxproj">

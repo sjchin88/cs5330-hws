@@ -1,5 +1,12 @@
 #include "utils.h";
 
+/**
+ *Given a directory name where the image files reside, this function
+  returns check through each of the file, and store the absolute path
+  of all image file in the imgLists vector.
+
+  The function returns a non-zero value if something goes wrong.
+*/
 int readImgFiles(char *dirname, vector<string> &imgLists)
 {
     FILE *fp;
@@ -42,7 +49,7 @@ int readImgFiles(char *dirname, vector<string> &imgLists)
         }
     }
 
-    printf("Terminating\n");
+    printf("Finish Processing\n");
 
     return (0);
 }
