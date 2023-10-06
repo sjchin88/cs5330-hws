@@ -177,6 +177,10 @@ if %errorlevel% neq 0 goto :VCEnd</Command>
       <Project>{CA2102EF-F367-35D6-A24A-0B08A0A2100D}</Project>
       <Name>buildDb</Name>
     </ProjectReference>
+    <ProjectReference Include="D:\OneDrive\NEU\CS5330 Computer Vision\cs5330-hws\Project2\build\imgDisplay.vcxproj">
+      <Project>{F73CAE75-6C90-34E4-97C2-B4A4F17D9BB6}</Project>
+      <Name>imgDisplay</Name>
+    </ProjectReference>
     <ProjectReference Include="D:\OneDrive\NEU\CS5330 Computer Vision\cs5330-hws\Project2\build\searchImg.vcxproj">
       <Project>{827AB938-E5CF-336B-8C0C-691D649EAA63}</Project>
       <Name>searchImg</Name>

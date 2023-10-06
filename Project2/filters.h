@@ -5,7 +5,8 @@
 #include <opencv2/imgcodecs.hpp>
 #include <opencv2/highgui.hpp>
 #include <opencv2/imgproc.hpp>
-
+#include <chrono>
+#include <ctime>
 using namespace std;
 using namespace cv;
 
@@ -18,4 +19,13 @@ int magnitude(cv::Mat &sx, cv::Mat &sy, cv::Mat &dst);
 int blurQuantize(cv::Mat &src, cv::Mat &dst, int levels);
 int cartoon(cv::Mat &src, cv::Mat &dst, int levels, int magThreshold);
 int negative(cv::Mat &src, cv::Mat &dst);
+
+/**
+ * Create a gabor filtered images based on gabor filters parameters of
+ * ksize and
+ * sigmas, thetas, lambdas and gammas,
+ * note these four parameters are loops thus if you have
+ * 2 of each, total of 16 gabor filter will be created and used to filter the image
+ */
+int gaborFiltering(cv::Mat &src, cv::Mat &dst, cv::Size &ksize, vector<float> &sigmas, vector<float> &thetas, vector<float> &lambdas, vector<float> &gammas);
 #endif

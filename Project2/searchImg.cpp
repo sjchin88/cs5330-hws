@@ -13,29 +13,10 @@
 #include <opencv2/highgui.hpp>
 #include <opencv2/core/types.hpp>
 #include <opencv2/imgproc.hpp>
-#include "utils.h"
-#include "featureCalcs.h"
-#include "csv_util.h"
-#include "distMetrics.h"
+#include "searchDb.h"
 
 using namespace std;
 using namespace cv;
-
-struct ResultStruct
-{
-  char *imgName;
-  float distance;
-  ResultStruct(char *name, float dist) : imgName(name), distance(dist) {}
-  bool operator<(const ResultStruct &result) const
-  {
-    return (distance < result.distance);
-  }
-};
-
-int searchBaseline(cv::Mat &targetImg, string &csvFile, vector<ResultStruct> &resultList);
-int searchRGHist(cv::Mat &targetImg, string &csvFile, const int histSize, vector<ResultStruct> &resultList);
-int searchMultiHistLR(cv::Mat &targetImg, string &csvFile, const int histSize, vector<ResultStruct> &resultList);
-int searchRGBNTexture(cv::Mat &targetImg, string &csvFilePath, vector<ResultStruct> &resultList);
 
 /*
   Given a directory on the command line, scans through the directory for image files.
@@ -51,7 +32,9 @@ int main(int argc, char *argv[])
     printf("usage: %s <target image path> <csv output directory> <feature option> <N (number of closest images to be displayed)>\n", argv[0]);
     exit(EXIT_FAILURE);
   }
+
   // Getting the variables from command line
+  // Parse targetImage from argv[1]
   string targetImagePath;
   cv::Mat targetImage;
   try
@@ -65,6 +48,7 @@ int main(int argc, char *argv[])
     exit(EXIT_FAILURE);
   }
 
+  // Parse csv file directory from argv[2]
   string csvDir;
   try
   {
@@ -76,7 +60,7 @@ int main(int argc, char *argv[])
     exit(EXIT_FAILURE);
   }
 
-  // Parse the option
+  // Parse the option from argv[3]
   int selectedIdx;
   try
   {
@@ -88,7 +72,7 @@ int main(int argc, char *argv[])
     exit(EXIT_FAILURE);
   }
 
-  // Parse the N
+  // Parse the N from argv[4]
   int topN;
   try
   {
@@ -100,8 +84,30 @@ int main(int argc, char *argv[])
     exit(EXIT_FAILURE);
   }
 
-  vector<ResultStruct> resultList;
+  // Parse the zoom factor if selectedIdx is 5 or 7 from argv[5]
+  float zoomFactor = 0;
+  if (selectedIdx == 5 || selectedIdx == 7)
+  {
+    if (argc < 6)
+    {
+      printf("missing zoom factor");
+      printf("usage: %s <target image path> <csv output directory> <feature option> <N (number of closest images to be displayed)> <zoom factor>\n", argv[0]);
+      exit(EXIT_FAILURE);
+    }
+    try
+    {
+      zoomFactor = stof(argv[5]);
+    }
+    catch (std::exception)
+    {
+      std::cout << "Error parsing zoom factor " << std::endl;
+      exit(EXIT_FAILURE);
+    }
+  }
 
+  // Search the corresponding database and update the distance to
+  // resultList
+  vector<ResultStruct> resultList;
   switch (selectedIdx)
   {
   case 1:
@@ -144,137 +150,47 @@ int main(int argc, char *argv[])
     };
     break;
   }
+  case 5:
+  {
+    string csvFilePath = csvDir + "zoomColorNTextHist.csv";
+    if (searchRGBNTexture(targetImage, csvFilePath, resultList, zoomFactor) != 0)
+    {
+      std::cout << "Error in searching database" << endl;
+      exit(EXIT_FAILURE);
+    };
+    break;
   }
+  case 6:
+  {
+    string csvFilePath = csvDir + "ColorNGaborHist.csv";
+    if (searchRGBNGabor(targetImage, csvFilePath, resultList) != 0)
+    {
+      std::cout << "Error in searching database" << endl;
+      exit(EXIT_FAILURE);
+    };
+    break;
+  }
+  case 7:
+  {
+    string csvFilePath = csvDir + "zoomColorNGaborHist.csv";
+    if (searchRGBNGabor(targetImage, csvFilePath, resultList, zoomFactor) != 0)
+    {
+      std::cout << "Error in searching database" << endl;
+      exit(EXIT_FAILURE);
+    };
+    break;
+  }
+  default:
+    break;
+  }
+
+  // Sort the result with lowest distance first
+  // output the top N to the screen
   sort(resultList.begin(), resultList.end());
-  for (int i = 0; i < topN; i++)
+  int limit = min(topN, static_cast<int>(resultList.size()));
+  for (int i = 0; i < limit; i++)
   {
     ResultStruct res = resultList[i];
     std::cout << res.imgName << " " << res.distance << endl;
   }
-}
-
-int searchBaseline(cv::Mat &targetImg, string &csvFilePath, vector<ResultStruct> &resultList)
-{
-  try
-  {
-    vector<int> featuresVec;
-    calcBaseline(targetImg, featuresVec);
-    vector<char *> imgNames;
-    vector<vector<int>> imgData;
-    char csvPath[256];
-    strcpy(csvPath, csvFilePath.c_str());
-
-    read_image_data_csv(csvPath, imgNames, imgData);
-    int size = imgNames.size();
-    for (int i = 0; i < size; i++)
-    {
-      float diff;
-      sum_of_squared_difference(featuresVec, imgData[i], diff);
-      resultList.push_back(ResultStruct(imgNames[i], diff));
-    }
-  }
-  catch (exception)
-  {
-    return (-1);
-  }
-
-  return 0;
-}
-
-int searchRGHist(cv::Mat &targetImg, string &csvFilePath, const int histSize, vector<ResultStruct> &resultList)
-{
-  try
-  {
-    vector<float> featuresVec;
-    calcRGHist(targetImg, featuresVec, histSize);
-    vector<char *> imgNames;
-    vector<vector<float>> imgData;
-    char csvPath[256];
-    strcpy(csvPath, csvFilePath.c_str());
-    read_image_data_csv(csvPath, imgNames, imgData);
-    int size = imgNames.size();
-    for (int i = 0; i < size; i++)
-    {
-      float diff;
-      histogram_intersect(featuresVec, imgData[i], diff);
-      resultList.push_back(ResultStruct(imgNames[i], diff));
-    }
-  }
-  catch (exception)
-  {
-    return (-1);
-  }
-
-  return 0;
-}
-
-int searchMultiHistLR(cv::Mat &targetImg, string &csvFilePath, const int histSize, vector<ResultStruct> &resultList)
-{
-  try
-  {
-    vector<float> featuresVec;
-    calcMultiHistLR(targetImg, featuresVec, histSize);
-    int halfCnt = histSize * histSize;
-    vector<float> leftFeatures = vector<float>(featuresVec.begin(), featuresVec.begin() + halfCnt);
-    vector<float> rightFeatures = vector<float>(featuresVec.begin() + halfCnt, featuresVec.end());
-    vector<char *> imgNames;
-    vector<vector<float>> imgData;
-    char csvPath[256];
-    strcpy(csvPath, csvFilePath.c_str());
-    read_image_data_csv(csvPath, imgNames, imgData);
-    int size = imgNames.size();
-    for (int i = 0; i < size; i++)
-    {
-      float diffLeft;
-      float diffRight;
-      vector<float> dataLeft = vector<float>(imgData[i].begin(), imgData[i].begin() + halfCnt);
-      vector<float> dataRight = vector<float>(imgData[i].begin() + halfCnt, imgData[i].end());
-      histogram_intersect(leftFeatures, dataLeft, diffLeft);
-      histogram_intersect(rightFeatures, dataRight, diffRight);
-      resultList.push_back(ResultStruct(imgNames[i], 0.5 * diffLeft + 0.5 * diffRight));
-    }
-  }
-  catch (exception)
-  {
-    return (-1);
-  }
-
-  return 0;
-}
-
-int searchRGBNTexture(cv::Mat &targetImg, string &csvFilePath, vector<ResultStruct> &resultList)
-{
-  try
-  {
-    vector<float> featuresVec;
-    if (calcRGBNTexture(targetImg, featuresVec) != 0)
-    {
-      return (-1);
-    }
-    int halfCnt = 8 * 8 * 8;
-    vector<float> leftFeatures = vector<float>(featuresVec.begin(), featuresVec.begin() + halfCnt);
-    vector<float> rightFeatures = vector<float>(featuresVec.begin() + halfCnt, featuresVec.end());
-    vector<char *> imgNames;
-    vector<vector<float>> imgData;
-    char csvPath[256];
-    strcpy(csvPath, csvFilePath.c_str());
-    read_image_data_csv(csvPath, imgNames, imgData);
-    int size = imgNames.size();
-    for (int i = 0; i < size; i++)
-    {
-      float diffRGB;
-      float diffTexture;
-      vector<float> dataRGB = vector<float>(imgData[i].begin(), imgData[i].begin() + halfCnt);
-      vector<float> dataTexture = vector<float>(imgData[i].begin() + halfCnt, imgData[i].end());
-      histogram_intersect(leftFeatures, dataRGB, diffRGB);
-      histogram_intersect(rightFeatures, dataTexture, diffTexture);
-      resultList.push_back(ResultStruct(imgNames[i], 0.5 * diffRGB + 0.5 * diffTexture));
-    }
-  }
-  catch (exception)
-  {
-    return (-1);
-  }
-
-  return 0;
 }

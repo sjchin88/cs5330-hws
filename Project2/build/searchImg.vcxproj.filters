@@ -19,6 +19,9 @@
     <ClCompile Include="D:\OneDrive\NEU\CS5330 Computer Vision\cs5330-hws\Project2\distMetrics.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="D:\OneDrive\NEU\CS5330 Computer Vision\cs5330-hws\Project2\searchDb.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="D:\OneDrive\NEU\CS5330 Computer Vision\cs5330-hws\Project2\csv_util.h">
@@ -34,6 +37,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="D:\OneDrive\NEU\CS5330 Computer Vision\cs5330-hws\Project2\distMetrics.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\OneDrive\NEU\CS5330 Computer Vision\cs5330-hws\Project2\searchDb.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

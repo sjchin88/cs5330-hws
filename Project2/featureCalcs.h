@@ -13,6 +13,8 @@
 #include <opencv2/imgcodecs.hpp>
 #include <opencv2/highgui.hpp>
 #include <opencv2/imgproc.hpp>
+#include <chrono>
+#include <ctime>
 #include "filters.h"
 using namespace std;
 using namespace cv;
@@ -49,4 +51,25 @@ int calcMultiHistLR(cv::Mat &src, vector<float> &featureVectors, const int histS
  */
 int calcRGBNTexture(cv::Mat &src, vector<float> &featureVectors);
 
+/**
+ * Calculate the feature vector based on a zoom portion of the image
+ * combining color histogram and texture histogram based on gradient magnitude image
+ * acceptable zoomFactor is between 0.1 to 1.0 (whole image)
+ * the zoomed image will center around the center of the original image
+ */
+int calcRGBNTexture(cv::Mat &src, vector<float> &featureVectors, const float zoomFactor);
+
+/*
+ * Calculate the feature vector based on a whole image color histogram
+ * and a whole image texture histogram based on output image after applying a set of gabor filters
+ */
+int calcRGBNGabor(cv::Mat &src, vector<float> &featureVectors, bool smallImg);
+
+/**
+ * Calculate the feature vector based on a zoom portion of the image
+ * combining color histogram and texture histogram based on gabor filters
+ * acceptable zoomFactor is between 0.1 to 1.0 (whole image)
+ * the zoomed image will center around the center of the original image
+ */
+int calcRGBNGabor(cv::Mat &src, vector<float> &featureVectors, const float zoomFactor);
 #endif
