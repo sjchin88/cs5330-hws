@@ -8,11 +8,23 @@ set(OpenCV_DIR "C:/opencv/build")
 find_package( OpenCV REQUIRED )
 include_directories( ${OpenCV_INCLUDE_DIRS} )
 
-add_executable(imgDisplay imgDisplay.cpp filters.h filters.cpp)
+add_executable(vidDisplay vidDisplay.cpp 
+filters.h filters.cpp
+utils.h utils.cpp
+)
+target_link_libraries( vidDisplay ${OpenCV_LIBS} )
+
+add_executable(imgDisplay imgDisplay.cpp 
+filters.h filters.cpp
+utils.h utils.cpp
+)
 target_link_libraries( imgDisplay ${OpenCV_LIBS} )
 
-add_executable(vidDisplay vidDisplay.cpp filters.h filters.cpp)
-target_link_libraries( vidDisplay ${OpenCV_LIBS} )
+add_executable(components components.cpp 
+filters.h filters.cpp
+utils.h utils.cpp
+)
+target_link_libraries( components ${OpenCV_LIBS} )
 
 set(CPACK_PROJECT_NAME ${PROJECT_NAME})
 set(CPACK_PROJECT_VERSION ${PROJECT_VERSION})

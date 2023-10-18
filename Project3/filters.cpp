@@ -1,22 +1,35 @@
+/*
+  Class Name    : CS5330 Pattern Recognition and Computer Vision
+  Session       : Fall 2023 (Seattle)
+  Name          : Shiang Jin Chin
+  Last Update   : 10/06/2023
+  Description   : Filters from project 1.
+                * Filters used in project 2:
+                * sobelX, sobelY and magnitude filter
+                * New filter added : Gabor filter
+*/
 #include "filters.h";
 
 using namespace cv;
 using namespace std;
 
-void printTest(int input)
-{
-    cout << "print test";
-}
-
-// Task 4 : Alternative greyscale version
-int greyscale(cv::Mat &src, cv::Mat &dst)
+/**
+ * Alternative greyscale based on custom constants vector
+ * Input : src image of BGR color in 3 channels
+ * Input : constants factor for BGR for grayscale conversion
+ * Output: dst image of grayscale in 1 channels
+ */
+int greyscale(cv::Mat &src, vector<float> constants, cv::Mat &dst)
 {
     try
     {
         // Get the number of rows and cols from the source
         const int rows = src.rows;
         const int cols = src.cols;
-        Mat tempFrame(src.size(), CV_8UC3, Scalar(0));
+        float bConst = constants[0];
+        float gConst = constants[1];
+        float rConst = constants[2];
+        Mat tempFrame(src.size(), CV_8UC1, Scalar(0));
         // Looping through each pixels for the rows and cols
         for (int y = 0; y < rows; y++)
         {
@@ -29,11 +42,9 @@ int greyscale(cv::Mat &src, cv::Mat &dst)
                 Vec3b bgrPixel = src.at<cv::Vec3b>(y, x);
 
                 // Custom processing function for the individual pixel
-                int grey_intensity = 0.1 * bgrPixel[0] + 0.1 * bgrPixel[1] + 0.8 * bgrPixel[2];
+                int grey_intensity = bConst * bgrPixel[0] + gConst * bgrPixel[1] + rConst * bgrPixel[2];
 
-                tempFrame.at<cv::Vec3b>(y, x)[0] = grey_intensity;
-                tempFrame.at<cv::Vec3b>(y, x)[1] = grey_intensity;
-                tempFrame.at<cv::Vec3b>(y, x)[2] = grey_intensity;
+                tempFrame.at<uint8_t>(y, x) = grey_intensity;
             }
         }
         dst = tempFrame;
@@ -388,4 +399,176 @@ int negative(cv::Mat &src, cv::Mat &dst)
     {
         return 1;
     }
+}
+
+/**
+ * Helper function to get all combinations of the gabor filters
+ */
+int buildGaborFilter(cv::Size &ksize, vector<float> &sigmas, vector<float> &thetas, vector<float> &lambdas, vector<float> &gammas, vector<cv::Mat> &gaborKernels)
+{
+    try
+    {
+        for (float sigma : sigmas)
+        {
+            for (float theta : thetas)
+            {
+                for (float lambda : lambdas)
+                {
+                    for (float gamma : gammas)
+                    {
+                        cv::Mat gaborKernel = cv::getGaborKernel(ksize, sigma, theta, lambda, gamma, 0);
+                        gaborKernel = gaborKernel / (1.5 * cv::sum(gaborKernel)); // Normalize the gaborKernel
+                        gaborKernels.push_back(gaborKernel);
+                    }
+                }
+            }
+        }
+    }
+    catch (exception)
+    {
+        return (-1);
+    }
+    return 0;
+}
+
+/**
+ * Create a gabor filtered images based on gabor filters parameters of
+ * ksize and
+ * sigmas, thetas, lambdas and gammas,
+ * note these four parameters are loops thus if you have
+ * 2 of each, total of 2 x 2 x 2 x 2 = 16 gabor filter will be created and used to filter the image
+ */
+int gaborFiltering(cv::Mat &src, cv::Mat &dst, cv::Size &ksize, vector<float> &sigmas, vector<float> &thetas, vector<float> &lambdas, vector<float> &gammas)
+{
+    try
+    {
+        vector<cv::Mat> gaborKernels;
+
+        if (buildGaborFilter(ksize, sigmas, thetas, lambdas, gammas, gaborKernels) != 0)
+        {
+            return (-1);
+        }
+
+        // Now process the image
+        dst = Mat::zeros(src.size(), CV_8UC3);
+        // Loop through each kernel and update the max output
+        // from the filter
+        cv::Mat tempMat;
+        for (Mat kernel : gaborKernels)
+        {
+            cv::filter2D(src, tempMat, src.depth(), kernel);
+            cv::max(dst, tempMat, dst);
+        }
+    }
+    catch (exception)
+    {
+        return (-1);
+    }
+    return 0;
+}
+
+/**
+ * Helper function to decrease the lightness based on saturation level
+ */
+int decreaseLightness(cv::Mat &src, cv::Mat &dst)
+{
+    try
+    {
+        // Step 1, convert to HSL, store in temp
+        Mat temp;
+        cv::cvtColor(src, temp, cv::COLOR_BGR2HLS);
+        // Loop through the pixels and set the lightness to be L/(1 + S/255)
+        for (int y = 0; y < temp.rows; y++)
+        {
+            for (int x = 0; x < temp.cols; x++)
+            {
+                Vec3b hlsPixel = temp.at<cv::Vec3b>(y, x);
+                int lightness = hlsPixel[1];
+                int saturation = hlsPixel[2];
+                temp.at<cv::Vec3b>(y, x)[1] = (int)(lightness / (1 + saturation * 1.0 / 255));
+            }
+        }
+
+        // convert back to BGR
+        cv::cvtColor(temp, dst, cv::COLOR_HLS2BGR);
+        // imshow("decrease lightness", dst);
+    }
+    catch (exception)
+    {
+        return (-1);
+    }
+    return 0;
+}
+
+/**
+ * Apply threshold to separates an object from the background
+ */
+int thresholdFilter(cv::Mat &src, cv::Mat &dst)
+{
+    try
+    {
+        // Preprocessing 1 Gaussian Blur
+        Mat temp1;
+        if (blur5x5(src, temp1) != 0)
+        {
+            return (-1);
+        }
+        imshow("After Preprocessing: Blur", temp1);
+
+        // Preprocessing 2 Decrease lightness based on saturation level
+        Mat temp2;
+        if (decreaseLightness(temp1, temp2) != 0)
+        {
+            return (-1);
+        }
+        imshow("After Preprocessing: Decrease lightness", temp2);
+
+        // Convert the RGB image to grayscale based on custom formula
+        vector<float> constants = {0.33, 0.33, 0.34};
+        Mat tempGray;
+        if (greyscale(temp2, constants, tempGray) != 0)
+        {
+            return (-1);
+        }
+        imshow("Converted to grayscale", tempGray);
+
+        // Get the thresholds
+        vector<int> thresholds;
+        if (getThreshold(tempGray, thresholds) != 0)
+        {
+            return (-1);
+        };
+        cout << "threshold size and value" << thresholds.size() << ":" << thresholds[0] << endl;
+        // Loop through the tempGray pixels and set the dst values according to threshold
+        dst = Mat::zeros(tempGray.size(), CV_8UC1);
+        for (int y = 0; y < tempGray.rows; y++)
+        {
+            for (int x = 0; x < tempGray.cols; x++)
+            {
+                dst.at<uint8_t>(y, x) = tempGray.at<uint8_t>(y, x) < thresholds[0] ? 255 : 0;
+            }
+        }
+    }
+    catch (exception)
+    {
+        return (-1);
+    }
+    return 0;
+}
+
+/**
+ * Apply the morphologyFilter with preset setting
+ */
+int morphologyFilter(cv::Mat &src, cv::Mat &dst)
+{
+    try
+    {
+        Mat kernel = cv::Mat::ones(cv::Size(5, 5), CV_8UC1);
+        cv::morphologyEx(src, dst, MORPH_OPEN, kernel);
+    }
+    catch (exception)
+    {
+        return (-1);
+    }
+    return 0;
 }
