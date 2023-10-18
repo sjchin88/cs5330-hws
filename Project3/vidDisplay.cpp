@@ -1,11 +1,19 @@
+/*
+  Class Name    : CS5330 Pattern Recognition and Computer Vision
+  Session       : Fall 2023 (Seattle)
+  Name          : Shiang Jin Chin
+  Last Update   : 10/06/2023
+  Description   : Filters from project 1.
+                * Filters used in project 2:
+                * sobelX, sobelY and magnitude filter
+                * New filter added : Gabor filter
+*/
 #include <opencv2/core.hpp>
 #include <opencv2/imgcodecs.hpp>
 #include <opencv2/highgui.hpp>
 #include <opencv2/imgproc.hpp>
 #include <iostream>
-#include <ctime>
 #include "filters.h"
-#include <chrono>
 
 using namespace std;
 using namespace cv;
@@ -53,7 +61,7 @@ int main(int argc, char *argv[])
     String defaultSavePath;
     try
     {
-        defaultSavePath = argv[2];
+        // defaultSavePath = argv[2];
     }
     catch (std::exception)
     {
@@ -62,31 +70,16 @@ int main(int argc, char *argv[])
     }
     cout << "save path is " << defaultSavePath << endl;
 
-    // Set the caption text
-    String captionText;
-    try
-    {
-        captionText = argv[3];
-    }
-    catch (std::exception)
-    {
-        // set it to default text
-        std::cout << "Unable to read caption text argument, setting it to default " << std::endl;
-        captionText = "Hahaha";
-    }
-    cout << "caption text is " << captionText << endl;
-
     // Initialize variables required
     namedWindow("Video", 1); // identifies a window
     Mat capturedFrame;
     Mat tempFrame;
     Mat displayFrame;
     char selection = 'R';
-    bool captioning = false;
     bool videoSaving = false;
     cv::VideoWriter videoWriter;
 
-    // Run the while loop
+        // Run the while loop
     while (true)
     {
         *capdev >> capturedFrame; // get a new frame from the camera, treat as a stream
@@ -104,103 +97,10 @@ int main(int argc, char *argv[])
         // and set the displayFrame to modified frame only if successful
         switch (selection)
         {
-        case 'G':
-            // Task3: Use the cvtColor() function to grayscale the image
-            cvtColor(capturedFrame, displayFrame, COLOR_BGR2GRAY);
-            break;
-
-        case 'H':
-            if (greyscale(capturedFrame, tempFrame) == 0)
-            {
-                displayFrame = tempFrame;
-            }
-            break;
-
-        case 'B':
-            if (blur5x5(capturedFrame, tempFrame) == 0)
-            {
-                displayFrame = tempFrame;
-            }
-            break;
-
-        case 'X':
-            if (sobelX3x3(capturedFrame, tempFrame) == 0)
-            {
-                // Output of sobelX3x3 filter are stored in 16S, convert it for display
-                Mat tempFrameOut;
-                convertScaleAbs(tempFrame, tempFrameOut);
-                displayFrame = tempFrameOut;
-            }
-            break;
-
-        case 'Y':
-            if (sobelY3x3(capturedFrame, tempFrame) == 0)
-            {
-                // Output of sobelY3x3 filter are stored in 16S, convert it for display
-                Mat tempFrameOut;
-                convertScaleAbs(tempFrame, tempFrameOut);
-                displayFrame = tempFrameOut;
-            }
-            break;
-
-        case 'M':
-        {
-            Mat tempFrameX;
-            Mat tempFrameY;
-            Mat tempFrameM;
-            Mat tempFrameOut;
-            if (sobelX3x3(capturedFrame, tempFrameX) == 0 && sobelY3x3(capturedFrame, tempFrameY) == 0)
-            {
-                if (magnitude(tempFrameX, tempFrameY, tempFrameM) == 0)
-                {
-                    // Output of magnitude filter are stored in 16S, convert it for display
-                    convertScaleAbs(tempFrameM, tempFrameOut);
-                    displayFrame = tempFrameOut;
-                }
-            }
-            break;
-        }
-
-        case 'I':
-        {
-            int defaultLevel = 15;
-            if (blurQuantize(capturedFrame, tempFrame, defaultLevel) == 0)
-            {
-                displayFrame = tempFrame;
-            }
-        }
-
-        case 'C':
-        {
-            int defaultLevel = 15;
-            int defaultMagThreshold = 15;
-            auto start = std::chrono::steady_clock::now();
-            if (cartoon(capturedFrame, tempFrame, defaultLevel, defaultMagThreshold) == 0)
-            {
-                displayFrame = tempFrame;
-            }
-            auto elapsed = std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::steady_clock::now() - start);
-            std::cout << "time taken to process a frame: " << elapsed.count() << "ms" << endl;
-            break;
-        }
-
-        case 'N':
-            if (negative(capturedFrame, tempFrame) == 0)
-            {
-                displayFrame = tempFrame;
-            }
-            break;
 
         default:
             displayFrame = capturedFrame;
             break;
-        }
-
-        // check if captioning is on, and add the caption text
-        if (captioning)
-        {
-            cv::Point2i btmLeft(50, 100);
-            cv::putText(displayFrame, captionText, btmLeft, cv::FONT_HERSHEY_SIMPLEX, 2.0, Scalar(0));
         }
 
         // check if video saving is on
@@ -217,56 +117,7 @@ int main(int argc, char *argv[])
         switch (key)
         {
 
-        // Task 3: keystroke g turn the current frame into greyscale
-        case 'g':
-            selection = 'G';
-            break;
-
-        // Task 4: keystroke h turn the current frame into custom greyscale
-        case 'h':
-            selection = 'H';
-            break;
-
-        // Task 5: keystroke h turn the current frame into blur5x5
-        case 'b':
-            selection = 'B';
-            break;
-
-        // Task 6: keystroke x, y turn the current frame into Sobel Filter
-        case 'x':
-            selection = 'X';
-            break;
-
-        case 'y':
-            selection = 'Y';
-            break;
-
-        // Task 7: keystroke m turn the current frame into gradient magnitude image
-        case 'm':
-            selection = 'M';
-            break;
-
-        // Task 8: keystroke i turn the current frame into blurs and quantizes image
-        case 'i':
-            selection = 'I';
-            break;
-
-        // Task 9: keystroke c turn the current frame into cartoon image
-        case 'c':
-            selection = 'C';
-            break;
-
-        // Task 10: keystroke n turn the current frame into negative of itself
-        case 'n':
-            selection = 'N';
-            break;
-
-        // Extension 1: keystroke t to turn on/off caption text
-        case 't':
-            captioning = !captioning;
-            break;
-
-        // Extension 2: keystroke v turn on saving video to the file
+        //  keystroke v turn on saving video to the file
         case 'v':
         {
             // if videoSaving is on, turn it off
