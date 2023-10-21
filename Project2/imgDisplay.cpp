@@ -1,3 +1,11 @@
+/*
+  Class Name    : CS5330 Pattern Recognition and Computer Vision
+  Session       : Fall 2023 (Seattle)
+  Name          : Shiang Jin Chin
+  Last Update   : 10/06/2023
+  Description   : imgDisplay program from Project 1
+                    used to verify the effect of Gabor filter for different parameters combo
+*/
 #include <opencv2/core.hpp>
 #include <opencv2/imgcodecs.hpp>
 #include <opencv2/highgui.hpp>

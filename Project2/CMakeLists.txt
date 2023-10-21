@@ -1,3 +1,10 @@
+
+# Class Name    : CS5330 Pattern Recognition and Computer Vision
+# Session       : Fall 2023 (Seattle)
+# Name          : Shiang Jin Chin
+# Last Update   : 10/06/2023
+
+
 cmake_minimum_required(VERSION 3.5.0)
 project(testrun VERSION 0.1.0 LANGUAGES C CXX)
 

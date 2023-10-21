@@ -82,7 +82,11 @@ v			Turn on/off the video saving
 q			quit the program
 
 5. Instructions for testing extensions 
-
+To detect multiple objects at once, just capture multiple objects using the video camera
+To detect unknown object, just place a random object not available in the existing DB for classification
+To use the system to quickly update the DB, run the imgDisplay program, 
+press keystroke n to enter a new label and save current object statistic to the Object DB
+For other usage, refer to part 4
 
 
 

@@ -1,6 +1,13 @@
+/*
+  Class Name    : CS5330 Pattern Recognition and Computer Vision
+  Session       : Fall 2023 (Seattle)
+  Name          : Shiang Jin Chin
+  Last Update   : 10/06/2023
+  Description   : All calculators to convert given image into a set of feature vectors for project 2
+*/
 #include "featureCalcs.h";
 /**
- * Calculate baseline feature vectors and store in the list
+ * Calculate baseline feature vectors from the src and append them into the featureVectors
  * by extracting the 9 x 9 square in the middle of the image
  */
 int calcBaseline(cv::Mat &src, vector<int> &featureVectors)
@@ -38,8 +45,8 @@ int calcBaseline(cv::Mat &src, vector<int> &featureVectors)
 }
 
 /**
- * Calculate the feature vector based on rg chromaticity histogram
- * Output the normalized histogram values into the feature vectors
+ * Calculate the feature vectors from the src and append them into the featureVectors
+ * based on rg chromaticity histogram
  * the histSize can be set by the user
  */
 int calcRGHist(cv::Mat &src, vector<float> &featureVectors, const int histSize)
@@ -60,7 +67,9 @@ int calcRGHist(cv::Mat &src, vector<float> &featureVectors, const int histSize)
                 float total = (R + G + B);
                 float r;
                 float g;
-                // Handle black pixel
+
+                // Handle black pixel, where RGB total is < 15
+                // set it to grey value
                 if (total < 15)
                 {
                     r = 1.0 / 3;
@@ -73,8 +82,10 @@ int calcRGHist(cv::Mat &src, vector<float> &featureVectors, const int histSize)
                 }
 
                 // Get r and g index and increment the histogram
-                // Formula below effectively convert r to scale of 0 - histSize - 1
-                // if histSize = 8, then 0.75 * 8 - 0.000001 = 5
+                // Formula below effectively convert r to scale of 0 : histSize - 1
+                // if histSize = 8, then we have scale of 0 to 7
+                // if value is 0.75 then 0.75 * 8 - 0.000001 = 5
+                // -0.000001 to account for border case (r/g == 1)
                 int ridx = r == 0 ? 0 : (int)(r * histSize - 0.000001);
                 int gidx = g == 0 ? 0 : (int)(g * histSize - 0.000001);
                 histogram.at<float>(ridx, gidx)++;
@@ -102,8 +113,9 @@ int calcRGHist(cv::Mat &src, vector<float> &featureVectors, const int histSize)
 }
 
 /**
- * Calculate the feature vector based on R, G, B histogram of 8 bins each
+ * Calculate the feature vectors based on R, G, B histogram of 8 bins each frpm the src
  * flatten the normalized histogram values into the 1-D feature vectors
+ * and append them into the featureVectors
  */
 int calcRGBHist(cv::Mat &src, vector<float> &featureVectors)
 {
@@ -154,7 +166,8 @@ int calcRGBHist(cv::Mat &src, vector<float> &featureVectors)
 }
 
 /**
- * Calculate the feature vector based on two histogram (left and right of the image)
+ * Calculate the feature vectors based on two rg chromaticity histogram
+ * for the left and right part of the src image
  * Output the normalized histogram values into the feature vectors
  * the histSize can be set by the user
  */
@@ -232,22 +245,32 @@ int calcGradTexture(cv::Mat &src, vector<float> &featureVectors)
 }
 
 /**
- * Calculate the feature vector based on a whole image color histogram
- * and a whole image texture histogram based on gradient magnitude image
+ * Helper method to get the focus image from src
+ * based on zoom factor
+ * and store it in dst
  */
-int calcRGBNTexture(cv::Mat &src, vector<float> &featureVectors)
+int getFocusImg(cv::Mat &src, cv::Mat &dst, float zoomFactor)
 {
     try
     {
-        // First calculate the RGB histogram
-        if (calcRGBHist(src, featureVectors) != 0)
+        if (zoomFactor < 1.0)
         {
-            return (-1);
+            // Get the number of rows and cols from the source
+            const int rows = src.rows;
+            const int cols = src.cols;
+
+            // calculate the image boundary based on zoom factor
+            const int top = rows / 2 - (rows * zoomFactor) / 2;
+            const int bottom = top + (rows * zoomFactor);
+            const int left = cols / 2 - (cols * zoomFactor) / 2;
+            const int right = left + (cols * zoomFactor);
+
+            // Get the zoom image
+            dst = src(Range(top, bottom), Range(left, right));
         }
-        // Next calculate the texture histogram based on gradient magnitude
-        if (calcGradTexture(src, featureVectors) != 0)
+        else if (zoomFactor == 1.0)
         {
-            return (-1);
+            dst = src;
         }
     }
     catch (exception)
@@ -259,37 +282,36 @@ int calcRGBNTexture(cv::Mat &src, vector<float> &featureVectors)
 }
 
 /**
- * Calculate the feature vector based on a zoom portion of the image
+ * Calculate the feature vectors based on a zoom portion of the src image
  * combining color histogram and texture histogram based on gradient magnitude image
- * acceptable zoomFactor is between 0.1 to 1.0 (whole image)
+ * acceptable zoomFactor is between 0.1 to 1.0 (1.0 is default option and cover whole image)
  * the zoomed image will center around the center of the original image
+ * append them into the featureVectors
  */
-int calcRGBNTexture(cv::Mat &src, vector<float> &featureVectors, const float zoomFactor)
+int calcRGBNTexture(cv::Mat &src, vector<float> &featureVectors, float zoomFactor)
 {
-    if (zoomFactor < 0.1 || zoomFactor >= 1.0)
+    if (zoomFactor < 0.1 || zoomFactor > 1.0)
     {
         cout << "Invalid zoom factor, please choose between 0.1 to 1.0" << endl;
         return (-1);
     }
     try
     {
-        // Get the number of rows and cols from the source
-        const int rows = src.rows;
-        const int cols = src.cols;
-
-        // calculate the image boundary based on zoom factor
-        const int top = rows / 2 - (rows * zoomFactor) / 2;
-        const int bottom = top + (rows * zoomFactor);
-        const int left = cols / 2 - (cols * zoomFactor) / 2;
-        const int right = left + (cols * zoomFactor);
-
-        // Get the zoom image
-        Mat zoomImg = src(Range(top, bottom), Range(left, right));
-
-        // Get the feature vector
-        if (calcRGBNTexture(zoomImg, featureVectors) != 0)
+        Mat focusImg;
+        if (getFocusImg(src, focusImg, zoomFactor) != 0)
         {
-            return -1;
+            return (-1);
+        }
+        // Get the feature vector
+        // First calculate the RGB histogram
+        if (calcRGBHist(focusImg, featureVectors) != 0)
+        {
+            return (-1);
+        }
+        // Next calculate the texture histogram based on gradient magnitude
+        if (calcGradTexture(focusImg, featureVectors) != 0)
+        {
+            return (-1);
         }
     }
     catch (exception)
@@ -310,6 +332,7 @@ int calcGaborTexture(cv::Mat &src, vector<float> &featureVectors, bool smallImg)
     {
         Mat tempImgTexture;
         // If it is small image use a smaller kernel for faster computation
+        // if it is large image use the larger kernel for faster computation
         cv::Size ksize = smallImg ? cv::Size(11, 11) : cv::Size(31, 31);
         // This list of sigmas, thetas, lambdas, gammas are preset values
         vector<float> sigmas;
@@ -343,62 +366,36 @@ int calcGaborTexture(cv::Mat &src, vector<float> &featureVectors, bool smallImg)
     return (0);
 }
 
-/*
- * Calculate the feature vector based on a whole image color histogram
- * and a whole image texture histogram based on output image after applying a set of gabor filters
- */
-int calcRGBNGabor(cv::Mat &src, vector<float> &featureVectors, bool smallImg)
-{
-    try
-    {
-        // First calculate the RGB histogram
-        if (calcRGBHist(src, featureVectors) != 0)
-        {
-            return (-1);
-        }
-        // Next calculate the texture histogram based on gradient magnitude
-        if (calcGaborTexture(src, featureVectors, smallImg) != 0)
-        {
-            return (-1);
-        }
-    }
-    catch (exception)
-    {
-        return (-1);
-    }
-
-    return (0);
-}
-
 /**
- * Calculate the feature vector based on a zoom portion of the image
+ * Calculate the feature vector based on a zoom portion of the src image
  * combining color histogram and texture histogram based on gabor filters
- * acceptable zoomFactor is between 0.1 to 1.0 (whole image)
+ * acceptable zoomFactor is between 0.1 to 1.0 (1.0 is default option and cover whole image)
  * the zoomed image will center around the center of the original image
+ * append them into the featureVectors
  */
-int calcRGBNGabor(cv::Mat &src, vector<float> &featureVectors, const float zoomFactor)
+int calcRGBNGabor(cv::Mat &src, vector<float> &featureVectors, float zoomFactor)
 {
-    if (zoomFactor < 0.1 || zoomFactor >= 1.0)
+    if (zoomFactor < 0.1 || zoomFactor > 1.0)
     {
         cout << "Invalid zoom factor, please choose between 0.1 to 1.0" << endl;
         return (-1);
     }
     try
     {
-        // Get the number of rows and cols from the source
-        const int rows = src.rows;
-        const int cols = src.cols;
-
-        // calculate the image boundary based on zoom factor
-        const int top = rows / 2 - (rows * zoomFactor) / 2;
-        const int bottom = top + (rows * zoomFactor);
-        const int left = cols / 2 - (cols * zoomFactor) / 2;
-        const int right = left + (cols * zoomFactor);
-
-        // Get the zoom image
-        Mat zoomImg = src(Range(top, bottom), Range(left, right));
-        // Get the feature vector
-        if (calcRGBNGabor(zoomImg, featureVectors, true) != 0)
+        Mat focusImg;
+        if (getFocusImg(src, focusImg, zoomFactor) != 0)
+        {
+            return (-1);
+        }
+        // if zoomFactor < 0.6, consider image to be small
+        bool smallImg = zoomFactor < 0.6 ? true : false;
+        // First calculate the RGB histogram
+        if (calcRGBHist(focusImg, featureVectors) != 0)
+        {
+            return (-1);
+        }
+        // Next calculate the texture histogram based on Gabor filters
+        if (calcGaborTexture(focusImg, featureVectors, smallImg) != 0)
         {
             return (-1);
         }

@@ -1,4 +1,13 @@
 /*
+  Class Name    : CS5330 Pattern Recognition and Computer Vision
+  Session       : Fall 2023 (Seattle)
+  Name          : Shiang Jin Chin
+  Last Update   : 10/06/2023
+  Description   : Based on files given in Project2, added new append method
+  and read method to handle int values
+*/
+
+/*
   Bruce A. Maxwell
 
   Utility functions for reading and writing CSV files with a specific format
