@@ -318,10 +318,14 @@ if %errorlevel% neq 0 goto :VCEnd</Command>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="D:\OneDrive\NEU\CS5330 Computer Vision\cs5330-hws\Project3\vidDisplay.cpp" />
+    <ClInclude Include="D:\OneDrive\NEU\CS5330 Computer Vision\cs5330-hws\Project3\file_util.h" />
+    <ClCompile Include="D:\OneDrive\NEU\CS5330 Computer Vision\cs5330-hws\Project3\file_util.cpp" />
     <ClInclude Include="D:\OneDrive\NEU\CS5330 Computer Vision\cs5330-hws\Project3\filters.h" />
     <ClCompile Include="D:\OneDrive\NEU\CS5330 Computer Vision\cs5330-hws\Project3\filters.cpp" />
-    <ClInclude Include="D:\OneDrive\NEU\CS5330 Computer Vision\cs5330-hws\Project3\utils.h" />
-    <ClCompile Include="D:\OneDrive\NEU\CS5330 Computer Vision\cs5330-hws\Project3\utils.cpp" />
+    <ClInclude Include="D:\OneDrive\NEU\CS5330 Computer Vision\cs5330-hws\Project3\features.h" />
+    <ClCompile Include="D:\OneDrive\NEU\CS5330 Computer Vision\cs5330-hws\Project3\features.cpp" />
+    <ClInclude Include="D:\OneDrive\NEU\CS5330 Computer Vision\cs5330-hws\Project3\classify.h" />
+    <ClCompile Include="D:\OneDrive\NEU\CS5330 Computer Vision\cs5330-hws\Project3\classify.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="D:\OneDrive\NEU\CS5330 Computer Vision\cs5330-hws\Project3\build\ZERO_CHECK.vcxproj">

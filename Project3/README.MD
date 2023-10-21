@@ -1,9 +1,9 @@
-CS5530 Fall 2023 (Seattle) Project 2 Readme
+CS5530 Fall 2023 (Seattle) Project 3 Readme
 Name: Chin Shiang Jin
 Student ID: 002798503
 
 1. Links/URLs to any videos you created and want to submit as part of your report.
-N/A
+See https://drive.google.com/file/d/1LmaWQyen2sSZ1dRzkEpMwjq2YCAMGdsd/view?usp=sharing
 
 2. What operating system and IDE you used to run and compile your code.
 Operating system - Window
@@ -35,60 +35,57 @@ and placed it in your visual studio directory.
 
 
 4. Instructions for using the program. 
-Run the buildDb program first to compute all feature vectors. The commandline arguments required are  
+Run the buildDb program first with training sets provided to compute all feature vectors for known objects. The commandline arguments required are  
 ./buildDB.exe Argv[1] Argv[2] Argv[3] Argv[4]
 where
-Argv[1] 	<absolute path to the image database>
+Argv[1] 	<absolute path to the image directory>
 Argv[2]		<absolute path of the directory to store the csv file>
-Argv[3]		<chosen method idx to compute features for an image F>
-Argv[4]		<zoom factor to use>	
 
-Available method to compute the features are as follow: 
-1	Baseline Matching using 9x9 square in the middle of the image
-2	Histogram Matching using normalized rg chromaticity histogram of 16 bins each
-3	Multi-histogram Matching by separating the image into left and right half, and use a normalized rg chromaticity histogram of 16 bins each for each half
-4 	Texture and Color matching, by using a whole image color histogram (of 8 bins R, G, B) and the histogram of gradient magnitude image. 
-5	Texture and Color matching on zoomed image based on method 4. Need to supply a zoom factor between 0.1 to 1.0. 
-6 	Texture and Color matching, by using a whole image color histogram (of 8 bins R, G, B) and the histogram of gabor filtered image. 
-7	Texture and Color matching on zoomed image based on method 6. Need to supply a zoom factor between 0.1 to 1.0. 
+Run the imgDisplay program for 2-D object recognition using stilled image. The required commandline arguments are
+./imgDisplay.exe	Argv[1] Argv[2] Argv[3] Argv[4] 
+Argv[1] 	<absolute path to the target img directory>
+Argv[2]		<absolute path of the directory storing the object DB csv>
+Argv[3] 	<top N number of connected region to be identified>
+Argv[4] 	<k-value for K-Nearest Neighbor matching>
+Argv[3] & argv[4] are optional, the program can run without them. 
 
-To search using the target Image, run the searchImg program with the following commandline arguments
-./searchImg.exe	Argv[1] Argv[2] Argv[3] Argv[4] Argv[5] Argv[6]
-Argv[1] 	<absolute path to the target img>
-Argv[2]		<absolute path of the directory to store the csv file>
-Argv[3]		<chosen method idx to compute features for an image F>
-Argv[4]		<chosen distance metric idx>
-Argv[5] 	<N number of most similar images to be display>
-Argv[6]		<zoom factor to use>
+The available key stroke and extension effect for the image program are as follow
+Keystroke 	Effect
+i			(Task 1) display the interim image after each preprocessing stage
+t 			(Task 1) Turn on/off the thresholded image display
+m 			(Task 2) Turn on/off the image after morphological operation
+c 			(Task 3) Turn on/off the image colored by connected regions
+z			(Task 4) Turn on/off the effect showing the axis of the least central moment and the oriented bounding box found
+x 			(Task 4) Turn on/off the compute features text caption
+n 			(Task 5) Prompt the user for a name/label input via the terminal, and then store the 
+			feature vector for the current object along with its label into a file
+a  			move to next image in the directory
+q			quit the program
 
-Available distance metric to compare the features are as follow: 
-1	Sum-of-square method
-2	histogram intersection
+Run the imgDisplay program for 2-D object recognition using video feed. The required commandline arguments are
+./vidDisplay.exe	Argv[1] Argv[2] Argv[3] Argv[4] Argv[5]
+Argv[1] 	<camera idx of video feed>
+Argv[2]		<absolute path of the directory for saving screenshot / video>
+Argv[3]		<absolute path of the directory storing the object DB csv>
+Argv[4] 	<top N number of connected region to be identified>
+Argv[5] 	<k-value for K-Nearest Neighbor matching>
+Argv[4] & argv[5] are optional, the program can run without them. 
+
+The available key stroke and extension effect for the video program are as follow
+Keystroke 	Effect
+t 			(Task 1) Turn on/off the thresholded image display
+c 			(Task 3) Turn on/off the image colored by connected regions
+z			(Task 4) Turn on/off the effect showing the axis of the least central moment and the oriented bounding box found
+x 			(Task 4) Turn on/off the compute features text caption
+s			save the screenshot of video
+v			Turn on/off the video saving
+q			quit the program
 
 5. Instructions for testing extensions 
-The extension implemented is the gabor filter bank. This can be tested by using the imgDisplay.exe from project 1. 
-To recap, For imgDisplay program, the commandline are: 
-Program name	 Argv[1]				   Argv[2]				 Argv[3]
-./imgDisplay.exe <absolute path to the image to be loaded> <location to save the modified image> "custom caption text"
 
-When the image or image frame is loaded,you can press keystroke 'a' to see the Gabor filtered image. 
 
-Other Keystroke and extension effects are as follow:
-Keystroke 	Effect
-s		(Task 1 & 2) save the image with effect (for imgDisplay) or save the screenshot of video with effect (for vidDisplay)
-q		(Task 1 & 2) quit the program
-g		(Task 3) Turn the image into grayscale using standard openCV grayscale function
-h		(Task 4) Turn the image into grayscale using custom grayscale function
-b		(Task 5) Applied 5x5 Gaussian filter to the image
-x		(Task 6) Applied sobelX effect to the image
-y		(Task 6) Applied sobelY effect to the image
-m		(Task 7) Applied gradient magnitude effect to the image
-i		(Task 8) Applied blurs and quantizes effect to the image
-c		(Task 9) Applied carton effect to the image
-n		(Task 10) Turn the current image into the negative of itself
-r		Change to no effect
-t		Turn on/off the captioning, display the caption text on the image 
-		If the captioning is already on, it will be turned off. If it is off, it will be turned on
+
+
 
 
 5. Time travel days used. 

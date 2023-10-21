@@ -173,9 +173,9 @@ if %errorlevel% neq 0 goto :VCEnd</Command>
       <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>
     </ProjectReference>
-    <ProjectReference Include="D:\OneDrive\NEU\CS5330 Computer Vision\cs5330-hws\Project3\build\components.vcxproj">
-      <Project>{FE6FEAE9-8387-3640-8910-274951D75C05}</Project>
-      <Name>components</Name>
+    <ProjectReference Include="D:\OneDrive\NEU\CS5330 Computer Vision\cs5330-hws\Project3\build\buildDb.vcxproj">
+      <Project>{96C15020-6831-320D-8225-87D48F2BA36D}</Project>
+      <Name>buildDb</Name>
     </ProjectReference>
     <ProjectReference Include="D:\OneDrive\NEU\CS5330 Computer Vision\cs5330-hws\Project3\build\imgDisplay.vcxproj">
       <Project>{B8C29D86-FAFB-34ED-B4D6-6124368F3C4E}</Project>
