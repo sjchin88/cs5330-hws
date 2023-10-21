@@ -1,7 +1,12 @@
 /*
-  CSJ
-  Build the feature vectors database
+  Class Name    : CS5330 Pattern Recognition and Computer Vision
+  Session       : Fall 2023 (Seattle)
+  Name          : Shiang Jin Chin
+  Last Update   : 10/06/2023
+  Description   : search the feature vectors database
+                  based on target image
 */
+
 #include <cstdio>
 #include <cstring>
 #include <cstdlib>
@@ -20,16 +25,17 @@ using namespace cv;
 
 /*
   Given a directory on the command line, scans through the directory for image files.
-
   Compute the feature vectors based on chosen method,
-  and store the feature vectors in an output csv file
+  extract the feature vectors of image database from the csv file
+  compared it with the target image using distance metrics chosen
+  output the top N result (may include the target image itself if present in the database)
  */
 int main(int argc, char *argv[])
 {
   // check for sufficient arguments
-  if (argc < 5)
+  if (argc < 6)
   {
-    printf("usage: %s <target image path> <csv output directory> <feature option> <N (number of closest images to be displayed)>\n", argv[0]);
+    printf("usage: %s <target image path> <csv output directory> <feature option> <distance metric option> <N (number of closest images to be displayed)>\n", argv[0]);
     exit(EXIT_FAILURE);
   }
 
@@ -60,7 +66,7 @@ int main(int argc, char *argv[])
     exit(EXIT_FAILURE);
   }
 
-  // Parse the option from argv[3]
+  // Parse the method option from argv[3]
   int selectedIdx;
   try
   {
@@ -68,15 +74,27 @@ int main(int argc, char *argv[])
   }
   catch (std::exception)
   {
-    std::cout << "Error parsing selected idx " << std::endl;
+    std::cout << "Error parsing method selection idx " << std::endl;
     exit(EXIT_FAILURE);
   }
 
-  // Parse the N from argv[4]
+  // Parse the distance metric option from argv[4]
+  int distIdx;
+  try
+  {
+    distIdx = stoi(argv[4]);
+  }
+  catch (std::exception)
+  {
+    std::cout << "Error parsing distance metrics idx " << std::endl;
+    exit(EXIT_FAILURE);
+  }
+
+  // Parse the N value from argv[5]
   int topN;
   try
   {
-    topN = stoi(argv[4]);
+    topN = stoi(argv[5]);
   }
   catch (std::exception)
   {
@@ -84,19 +102,19 @@ int main(int argc, char *argv[])
     exit(EXIT_FAILURE);
   }
 
-  // Parse the zoom factor if selectedIdx is 5 or 7 from argv[5]
-  float zoomFactor = 0;
+  // Parse the zoom factor if selectedIdx is 5 or 7 from argv[6]
+  float zoomFactor = 1.0F;
   if (selectedIdx == 5 || selectedIdx == 7)
   {
-    if (argc < 6)
+    if (argc < 7)
     {
       printf("missing zoom factor");
-      printf("usage: %s <target image path> <csv output directory> <feature option> <N (number of closest images to be displayed)> <zoom factor>\n", argv[0]);
+      printf("usage: %s <target image path> <csv output directory> <feature option> <distance metric option> <N (number of closest images to be displayed)> <zoom factor>\n", argv[0]);
       exit(EXIT_FAILURE);
     }
     try
     {
-      zoomFactor = stof(argv[5]);
+      zoomFactor = stof(argv[6]);
     }
     catch (std::exception)
     {
@@ -123,7 +141,7 @@ int main(int argc, char *argv[])
   case 2:
   {
     string csvFilePath = csvDir + "rghistogram.csv";
-    if (searchRGHist(targetImage, csvFilePath, 16, resultList) != 0)
+    if (searchRGHist(targetImage, csvFilePath, 16, resultList, distIdx) != 0)
     {
       std::cout << "Error in searching database" << endl;
       exit(EXIT_FAILURE);
@@ -133,7 +151,7 @@ int main(int argc, char *argv[])
   case 3:
   {
     string csvFilePath = csvDir + "multihistogram.csv";
-    if (searchMultiHistLR(targetImage, csvFilePath, 16, resultList) != 0)
+    if (searchMultiHistLR(targetImage, csvFilePath, 16, resultList, distIdx) != 0)
     {
       std::cout << "Error in searching database" << endl;
       exit(EXIT_FAILURE);
@@ -143,7 +161,7 @@ int main(int argc, char *argv[])
   case 4:
   {
     string csvFilePath = csvDir + "colorNTextureHist.csv";
-    if (searchRGBNTexture(targetImage, csvFilePath, resultList) != 0)
+    if (searchRGBNTexture(targetImage, csvFilePath, resultList, distIdx) != 0)
     {
       std::cout << "Error in searching database" << endl;
       exit(EXIT_FAILURE);
@@ -153,7 +171,7 @@ int main(int argc, char *argv[])
   case 5:
   {
     string csvFilePath = csvDir + "zoomColorNTextHist.csv";
-    if (searchRGBNTexture(targetImage, csvFilePath, resultList, zoomFactor) != 0)
+    if (searchRGBNTexture(targetImage, csvFilePath, resultList, distIdx, zoomFactor) != 0)
     {
       std::cout << "Error in searching database" << endl;
       exit(EXIT_FAILURE);
@@ -163,7 +181,7 @@ int main(int argc, char *argv[])
   case 6:
   {
     string csvFilePath = csvDir + "ColorNGaborHist.csv";
-    if (searchRGBNGabor(targetImage, csvFilePath, resultList) != 0)
+    if (searchRGBNGabor(targetImage, csvFilePath, resultList, distIdx) != 0)
     {
       std::cout << "Error in searching database" << endl;
       exit(EXIT_FAILURE);
@@ -173,7 +191,7 @@ int main(int argc, char *argv[])
   case 7:
   {
     string csvFilePath = csvDir + "zoomColorNGaborHist.csv";
-    if (searchRGBNGabor(targetImage, csvFilePath, resultList, zoomFactor) != 0)
+    if (searchRGBNGabor(targetImage, csvFilePath, resultList, distIdx, zoomFactor) != 0)
     {
       std::cout << "Error in searching database" << endl;
       exit(EXIT_FAILURE);
@@ -193,4 +211,5 @@ int main(int argc, char *argv[])
     ResultStruct res = resultList[i];
     std::cout << res.imgName << " " << res.distance << endl;
   }
+  exit(EXIT_SUCCESS);
 }

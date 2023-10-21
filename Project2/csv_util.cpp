@@ -1,4 +1,12 @@
 /*
+  Class Name    : CS5330 Pattern Recognition and Computer Vision
+  Session       : Fall 2023 (Seattle)
+  Name          : Shiang Jin Chin
+  Last Update   : 10/06/2023
+  Description   : Based on files given in Project2, added new append method
+  and read method to handle int values
+*/
+/*
 Bruce A. Maxwell
 
 CS 5330 Computer Vision
@@ -18,7 +26,6 @@ The function returns a std::vector of char* for the filenames and a 2D std::vect
 
 /*
   reads a string from a CSV file. the 0-terminated string is returned in the char array os.
-
   The function returns false if it is successfully read. It returns true if it reaches the end of the line or the file.
  */
 int getstring(FILE *fp, char os[])

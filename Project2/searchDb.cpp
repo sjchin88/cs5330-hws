@@ -1,28 +1,47 @@
+/*
+  Class Name    : CS5330 Pattern Recognition and Computer Vision
+  Session       : Fall 2023 (Seattle)
+  Name          : Shiang Jin Chin
+  Last Update   : 10/06/2023
+  Description   : All required method to search the database
+*/
 #include "searchDb.h"
 
 /**
  * compute the distance in baseline database located in csvFilePath
  * compare to the targetImg
  * store all the result in resultList
+ * For baseline, default is using sum of square distance method
  */
 int searchBaseline(cv::Mat &targetImg, string &csvFilePath, vector<ResultStruct> &resultList)
 {
     try
     {
         vector<int> featuresVec;
-        calcBaseline(targetImg, featuresVec);
+        if (calcBaseline(targetImg, featuresVec) != 0)
+        {
+            cout << "error computing feature vectors for target image" << endl;
+            return (-1);
+        };
         vector<char *> imgNames;
         vector<vector<int>> imgData;
         char csvPath[256];
         strcpy(csvPath, csvFilePath.c_str());
 
-        read_image_data_csv(csvPath, imgNames, imgData);
+        if (read_image_data_csv(csvPath, imgNames, imgData) != 0)
+        {
+            cout << "error reading image database csv file " << endl;
+            return (-1);
+        };
         int size = imgNames.size();
         for (int i = 0; i < size; i++)
         {
             float diff;
-            sum_of_squared_difference(featuresVec, imgData[i], diff);
-            resultList.push_back(ResultStruct(imgNames[i], diff));
+            // Push to resultList if calculation successful
+            if (sum_of_squared_difference(featuresVec, imgData[i], diff) == 0)
+            {
+                resultList.push_back(ResultStruct(imgNames[i], diff));
+            };
         }
     }
     catch (exception)
@@ -38,24 +57,37 @@ int searchBaseline(cv::Mat &targetImg, string &csvFilePath, vector<ResultStruct>
  * compare to the targetImg
  * store all the result in resultList
  * histSize determine the size of n-bins used
+ * distIdx determine which dist metrics to use
+ * 1 - for sum of square, 2 - for histogram intersection
  */
-int searchRGHist(cv::Mat &targetImg, string &csvFilePath, const int histSize, vector<ResultStruct> &resultList)
+int searchRGHist(cv::Mat &targetImg, string &csvFilePath, const int histSize, vector<ResultStruct> &resultList, const int distIdx)
 {
     try
     {
         vector<float> featuresVec;
-        calcRGHist(targetImg, featuresVec, histSize);
+        if (calcRGHist(targetImg, featuresVec, histSize) != 0)
+        {
+            cout << "error computing feature vectors for target image" << endl;
+            return (-1);
+        };
         vector<char *> imgNames;
         vector<vector<float>> imgData;
         char csvPath[256];
         strcpy(csvPath, csvFilePath.c_str());
-        read_image_data_csv(csvPath, imgNames, imgData);
+        if (read_image_data_csv(csvPath, imgNames, imgData) != 0)
+        {
+            cout << "error reading image database csv file " << endl;
+            return (-1);
+        };
+
         int size = imgNames.size();
         for (int i = 0; i < size; i++)
         {
             float diff;
-            histogram_intersect(featuresVec, imgData[i], diff);
-            resultList.push_back(ResultStruct(imgNames[i], diff));
+            if (getDistance(featuresVec, imgData[i], diff, distIdx) == 0)
+            {
+                resultList.push_back(ResultStruct(imgNames[i], diff));
+            };
         }
     }
     catch (exception)
@@ -72,7 +104,7 @@ int searchRGHist(cv::Mat &targetImg, string &csvFilePath, const int histSize, ve
  * halfCnt determine the separation between the first and second feature vector
  * firstWeight & secWeight determine the respective weight of the distance metrics
  */
-int twoHistIntersect(vector<float> &featuresVec, const int halfCnt, string &csvFilePath, const float firstWeight, const float secWeight, vector<ResultStruct> &resultList)
+int twoHistIntersect(vector<float> &featuresVec, const int halfCnt, string &csvFilePath, const float firstWeight, const float secWeight, vector<ResultStruct> &resultList, const int distIdx)
 {
     try
     {
@@ -85,7 +117,11 @@ int twoHistIntersect(vector<float> &featuresVec, const int halfCnt, string &csvF
         vector<vector<float>> imgData;
         char csvPath[256];
         strcpy(csvPath, csvFilePath.c_str());
-        read_image_data_csv(csvPath, imgNames, imgData);
+        if (read_image_data_csv(csvPath, imgNames, imgData) != 0)
+        {
+            cout << "error reading image database csv file " << endl;
+            return (-1);
+        };
 
         // Loop through each image and computed feature vectors
         int size = imgNames.size();
@@ -98,11 +134,12 @@ int twoHistIntersect(vector<float> &featuresVec, const int halfCnt, string &csvF
             // Compute the histogram intersection distance value separately
             float diffLeft;
             float diffRight;
-            histogram_intersect(leftFeatures, dataLeft, diffLeft);
-            histogram_intersect(rightFeatures, dataRight, diffRight);
-
-            // Combine the distance according to predetermined weights
-            resultList.push_back(ResultStruct(imgNames[i], firstWeight * diffLeft + secWeight * diffRight));
+            if (getDistance(leftFeatures, dataLeft, diffLeft, distIdx) == 0 &&
+                getDistance(rightFeatures, dataRight, diffRight, distIdx) == 0)
+            {
+                // Combine the distance according to predetermined weights
+                resultList.push_back(ResultStruct(imgNames[i], firstWeight * diffLeft + secWeight * diffRight));
+            }
         }
     }
     catch (exception)
@@ -118,15 +155,21 @@ int twoHistIntersect(vector<float> &featuresVec, const int halfCnt, string &csvF
  * compare to the targetImg
  * store all the result in resultList
  * histSize determine the size of n-bins used
+ * distIdx determine which dist metrics to use
+ * 1 - for sum of square, 2 - for histogram intersection
  */
-int searchMultiHistLR(cv::Mat &targetImg, string &csvFilePath, const int histSize, vector<ResultStruct> &resultList)
+int searchMultiHistLR(cv::Mat &targetImg, string &csvFilePath, const int histSize, vector<ResultStruct> &resultList, const int distIdx)
 {
     try
     {
         vector<float> featuresVec;
-        calcMultiHistLR(targetImg, featuresVec, histSize);
+        if (calcMultiHistLR(targetImg, featuresVec, histSize) != 0)
+        {
+            cout << "error computing feature vectors for target image" << endl;
+            return (-1);
+        };
         int halfCnt = histSize * histSize;
-        if (twoHistIntersect(featuresVec, halfCnt, csvFilePath, 0.5, 0.5, resultList) != 0)
+        if (twoHistIntersect(featuresVec, halfCnt, csvFilePath, 0.5, 0.5, resultList, distIdx) != 0)
         {
             return (-1);
         }
@@ -143,36 +186,13 @@ int searchMultiHistLR(cv::Mat &targetImg, string &csvFilePath, const int histSiz
  * compute the distance of images in the RGB and (gradient magnitude) Texture combined histogram database located in csvFilePath
  * compare to the targetImg
  * store all the result in resultList
+ * distIdx determine which dist metrics to use
+ * 1 - for sum of square, 2 - for histogram intersection
+ * zoom factor determine portion of image to focus around center
+ * default value is 1.0 (whole image)
+ * note the zoom factor need to be the same as value used in building the image database
  */
-int searchRGBNTexture(cv::Mat &targetImg, string &csvFilePath, vector<ResultStruct> &resultList)
-{
-    try
-    {
-        vector<float> featuresVec;
-        if (calcRGBNTexture(targetImg, featuresVec) != 0)
-        {
-            return (-1);
-        }
-        int halfCnt = 8 * 8 * 8;
-        if (twoHistIntersect(featuresVec, halfCnt, csvFilePath, 0.5, 0.5, resultList) != 0)
-        {
-            return (-1);
-        }
-    }
-    catch (exception)
-    {
-        return (-1);
-    }
-
-    return 0;
-}
-
-/**
- * compute the distance of images in the RGB and (gradient magnitude) Texture combined histogram database located in csvFilePath
- * compare to the targetImg with specified zoomFactor
- * store all the result in resultList
- */
-int searchRGBNTexture(cv::Mat &targetImg, string &csvFilePath, vector<ResultStruct> &resultList, float zoomFactor)
+int searchRGBNTexture(cv::Mat &targetImg, string &csvFilePath, vector<ResultStruct> &resultList, const int distIdx, float zoomFactor)
 {
     try
     {
@@ -181,9 +201,8 @@ int searchRGBNTexture(cv::Mat &targetImg, string &csvFilePath, vector<ResultStru
         {
             return (-1);
         }
-
         int halfCnt = 8 * 8 * 8;
-        if (twoHistIntersect(featuresVec, halfCnt, csvFilePath, 0.5, 0.5, resultList) != 0)
+        if (twoHistIntersect(featuresVec, halfCnt, csvFilePath, 0.5, 0.5, resultList, distIdx) != 0)
         {
             return (-1);
         }
@@ -200,36 +219,13 @@ int searchRGBNTexture(cv::Mat &targetImg, string &csvFilePath, vector<ResultStru
  * compute the distance of images in the RGB and Gabor Texture combined histogram database located in csvFilePath
  * compare to the targetImg
  * store all the result in resultList
+ * distIdx determine which dist metrics to use
+ * 1 - for sum of square, 2 - for histogram intersection
+ * zoom factor determine portion of image to focus around center
+ * default value is 1.0 (whole image)
+ * note the zoom factor need to be the same as value used in building the image database
  */
-int searchRGBNGabor(cv::Mat &targetImg, string &csvFilePath, vector<ResultStruct> &resultList)
-{
-    try
-    {
-        vector<float> featuresVec;
-        if (calcRGBNGabor(targetImg, featuresVec, false) != 0)
-        {
-            return (-1);
-        }
-        int halfCnt = 8 * 8 * 8;
-        if (twoHistIntersect(featuresVec, halfCnt, csvFilePath, 0.5, 0.5, resultList) != 0)
-        {
-            return (-1);
-        }
-    }
-    catch (exception)
-    {
-        return (-1);
-    }
-
-    return 0;
-}
-
-/**
- * compute the distance of images in the RGB and Gabor Texture combined histogram database located in csvFilePath
- * compare to the targetImg
- * store all the result in resultList
- */
-int searchRGBNGabor(cv::Mat &targetImg, string &csvFilePath, vector<ResultStruct> &resultList, float zoomFactor)
+int searchRGBNGabor(cv::Mat &targetImg, string &csvFilePath, vector<ResultStruct> &resultList, const int distIdx, float zoomFactor)
 {
     try
     {
@@ -239,7 +235,7 @@ int searchRGBNGabor(cv::Mat &targetImg, string &csvFilePath, vector<ResultStruct
             return (-1);
         }
         int halfCnt = 8 * 8 * 8;
-        if (twoHistIntersect(featuresVec, halfCnt, csvFilePath, 0.5, 0.5, resultList) != 0)
+        if (twoHistIntersect(featuresVec, halfCnt, csvFilePath, 0.5, 0.5, resultList, distIdx) != 0)
         {
             return (-1);
         }

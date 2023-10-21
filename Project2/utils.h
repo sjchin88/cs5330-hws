@@ -1,10 +1,13 @@
 /*
-  Shiang Jin, Chin
+  Class Name    : CS5330 Pattern Recognition and Computer Vision
+  Session       : Fall 2023 (Seattle)
+  Name          : Shiang Jin Chin
+  Last Update   : 10/06/2023
+  Description   : Other Utilities function used for project 2. This include
+                  function to read the all the image files in a directory and
+                  return a list of string containing all the valid file name
+*/
 
-  Other Utilities function used for project 2
-  This include
-  function to read the all the image files in a directory and return a list of string containing all the valid file name
- */
 #ifndef UTILS_H
 #define UTILS_H
 

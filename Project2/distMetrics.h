@@ -1,9 +1,10 @@
 /*
-  Shiang Jin, Chin
-
-  All distMetrics to compute the distance between two vectors
- */
-
+  Class Name    : CS5330 Pattern Recognition and Computer Vision
+  Session       : Fall 2023 (Seattle)
+  Name          : Shiang Jin Chin
+  Last Update   : 10/06/2023
+  Description   : All distMetrics to compute the distance between two vectors
+*/
 #ifndef DISTMETRICS_H
 #define DISTMETRICS_H
 
@@ -24,7 +25,14 @@ int sum_of_squared_difference(vector<int> &targetFeature, vector<int> &srcFeatur
 
 /**
  * Calculate the histogram intersection between two histogram, return as the difference (1 - intersect Total)
+ * and stored in result
  */
 int histogram_intersect(vector<float> &targetFeature, vector<float> &srcFeature, float &result);
 
+/**
+ * Calculate the distance between two vectors
+ * Using distOption chosen - 1 for sum_of_squared, 2 - for histogram intersection
+ * store the difference in result
+ */
+int getDistance(vector<float> &targetFeature, vector<float> &srcFeature, float &result, const int distOption);
 #endif

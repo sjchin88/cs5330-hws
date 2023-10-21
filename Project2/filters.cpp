@@ -1,3 +1,13 @@
+/*
+  Class Name    : CS5330 Pattern Recognition and Computer Vision
+  Session       : Fall 2023 (Seattle)
+  Name          : Shiang Jin Chin
+  Last Update   : 10/06/2023
+  Description   : Filters from project 1.
+                * Filters used in project 2:
+                * sobelX, sobelY and magnitude filter
+                * New filter added : Gabor filter
+*/
 #include "filters.h";
 
 using namespace cv;
@@ -414,12 +424,13 @@ int buildFilter(cv::Size &ksize, vector<float> &sigmas, vector<float> &thetas, v
     }
     return 0;
 }
+
 /**
  * Create a gabor filtered images based on gabor filters parameters of
  * ksize and
  * sigmas, thetas, lambdas and gammas,
  * note these four parameters are loops thus if you have
- * 2 of each, total of 16 gabor filter will be created and used to filter the image
+ * 2 of each, total of 2 x 2 x 2 x 2 = 16 gabor filter will be created and used to filter the image
  */
 int gaborFiltering(cv::Mat &src, cv::Mat &dst, cv::Size &ksize, vector<float> &sigmas, vector<float> &thetas, vector<float> &lambdas, vector<float> &gammas)
 {

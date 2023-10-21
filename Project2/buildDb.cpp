@@ -1,6 +1,9 @@
 /*
-  CSJ
-  Build the feature vectors database
+  Class Name    : CS5330 Pattern Recognition and Computer Vision
+  Session       : Fall 2023 (Seattle)
+  Name          : Shiang Jin Chin
+  Last Update   : 10/06/2023
+  Description   : Build the feature vectors database
 */
 #include <cstdio>
 #include <cstring>
@@ -24,8 +27,11 @@ using namespace std;
 using namespace cv;
 
 /**
- * Helper function to compute the feature vectors and append it to save csv
- * according to selectedIdx
+ * Helper function to compute the feature vectors
+ * based on imageList
+ * and append it to save csv in outputName
+ * according to selectedIdx for the feature computation method
+ * and zoom factor if you only focus on part of the image
  */
 int computeNSave(vector<string> &imageList, char *outputName, int selectedIdx, float zoomFactor);
 
@@ -37,13 +43,15 @@ int computeNSave(vector<string> &imageList, char *outputName, int selectedIdx, f
 int main(int argc, char *argv[])
 {
     // check for sufficient arguments
+    // argv[1] = image database, argv[2] = defaultSavePath, argv[3] = feature option, argv[4] = zoom factor
+    // zoom factor only required if you choose method 5 & 7
     if (argc < 4)
     {
         printf("usage: %s <image directory path> <csv output directory> <feature option>\n", argv[0]);
         exit(EXIT_FAILURE);
     }
     // Getting the variables from command line
-    // argv[1] = image database, argv[2] = defaultSavePath, argv[3] = feature option, argv[4] = zoom factor
+
     // parse for image database directory from argv[1]
     char dirname[256];
     try
@@ -82,7 +90,7 @@ int main(int argc, char *argv[])
     }
 
     // Parse the zoom factor if selectedIdx is 5 or 7 from argv[4]
-    float zoomFactor = 0;
+    float zoomFactor = 1.0;
     if (selectedIdx == 5 || selectedIdx == 7)
     {
         if (argc < 5)
@@ -142,14 +150,20 @@ int main(int argc, char *argv[])
         exit(EXIT_FAILURE);
     };
     // pass to helper method
-    computeNSave(imgList, outputName, selectedIdx, zoomFactor);
+    if (computeNSave(imgList, outputName, selectedIdx, zoomFactor) != 0)
+    {
+        exit(EXIT_FAILURE);
+    };
 
     exit(EXIT_SUCCESS);
 }
 
 /**
- * Helper function to compute the feature vectors and append it to save csv
- * according to selectedIdx
+ * Helper function to compute the feature vectors
+ * based on imageList
+ * and append it to save csv in outputName
+ * according to selectedIdx for the feature computation method
+ * and zoom factor if you only focus on part of the image
  */
 int computeNSave(vector<string> &imageList, char *outputName, int selectedIdx, float zoomFactor)
 {
@@ -160,7 +174,17 @@ int computeNSave(vector<string> &imageList, char *outputName, int selectedIdx, f
     // Loop trough each image and compute the feature
     for (string fname : imageList)
     {
-        cv::Mat img = imread(fname);
+        cv::Mat img;
+        try
+        {
+            img = imread(fname);
+        }
+        catch (exception)
+        {
+            cout << "error in reading the image for " << fname << endl;
+            continue;
+        }
+
         char imgFname[256];
         strcpy(imgFname, fname.c_str());
         vector<int> featuresVecInt;
@@ -216,7 +240,7 @@ int computeNSave(vector<string> &imageList, char *outputName, int selectedIdx, f
         }
         case 6:
         {
-            if (calcRGBNGabor(img, featuresVecFloat, false) != 0)
+            if (calcRGBNGabor(img, featuresVecFloat) != 0)
             {
                 cout << "Error in computing feature vectors for" << imgFname << endl;
                 break;
