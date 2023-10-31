@@ -1,0 +1,10 @@
+^D:\ONEDRIVE\NEU\CS5330 COMPUTER VISION\CS5330-HWS\PROJECT4\CMAKELISTS.TXT
+setlocal
+"C:\Program Files\CMake\bin\cmake.exe" "-SD:/OneDrive/NEU/CS5330 Computer Vision/cs5330-hws/Project4" "-BD:/OneDrive/NEU/CS5330 Computer Vision/cs5330-hws/Project4/build" --check-stamp-file "D:/OneDrive/NEU/CS5330 Computer Vision/cs5330-hws/Project4/build/CMakeFiles/generate.stamp"
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal & call :cmErrorLevel %errorlevel% & goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd
