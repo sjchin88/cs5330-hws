@@ -1,6 +1,9 @@
 #include "utils.h"
 
-int calibrateNSave(Mat &frame, vector<vector<cv::Vec3f>> &point_list, vector<vector<cv::Point2f>> &corner_list, String saveDir)
+using namespace std;
+using namespace cv;
+
+int calibrateNSave(Mat &frame, vector<vector<cv::Vec3f>> &point_list, vector<vector<cv::Point2f>> &corner_list, string saveDir)
 {
     try
     {
@@ -49,7 +52,7 @@ int saveIntrinsic(Mat &cameraMatrix, Mat distCoeffs, string saveDir)
     try
     {
         string filename = saveDir + "cameraIntrinsic.xml";
-        FileStorage fs(filename, FileStorage::WRITE);
+        cv::FileStorage fs(filename, cv::FileStorage::WRITE);
         fs << "CameraMatrix" << cameraMatrix;
         fs << "DistortionCoeffs" << distCoeffs;
         fs.release();
@@ -69,7 +72,7 @@ int readIntrinsic(Mat &cameraMatrix, Mat distCoeffs, string saveDir)
     try
     {
         string filename = saveDir + "cameraIntrinsic.xml";
-        FileStorage fs(filename, FileStorage::READ);
+        cv::FileStorage fs(filename, cv::FileStorage::READ);
         fs["CameraMatrix"] >> cameraMatrix;
         fs["DistortionCoeffs"] >> distCoeffs;
         fs.release();

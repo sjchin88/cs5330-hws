@@ -15,7 +15,7 @@ add_executable(calibrateProg calibrateProg.cpp
 target_link_libraries( calibrateProg ${OpenCV_LIBS} )
 
 add_executable(displayAR displayAR.cpp 
-    utils.h utils.cpp
+    utils.h utils.cpp objLoader.h
 )
 target_link_libraries( displayAR ${OpenCV_LIBS} )
 

@@ -24,7 +24,7 @@ events:
       The output was:
       0
       MSBuild version 17.7.2+d6990bcfa for .NET Framework
-      Build started 10/29/2023 4:01:21 AM.
+      Build started 10/31/2023 6:14:23 AM.
       
       Project "D:\\OneDrive\\NEU\\CS5330 Computer Vision\\cs5330-hws\\Project4\\build\\CMakeFiles\\3.27.5\\CompilerIdC\\CompilerIdC.vcxproj" on node 1 (default targets).
       PrepareForBuild:
@@ -52,7 +52,7 @@ events:
           0 Warning(s)
           0 Error(s)
       
-      Time Elapsed 00:00:03.22
+      Time Elapsed 00:00:01.09
       
       
       Compilation of the C compiler identification source "CMakeCCompilerId.c" produced "CompilerIdC.exe"
@@ -78,7 +78,7 @@ events:
       The output was:
       0
       MSBuild version 17.7.2+d6990bcfa for .NET Framework
-      Build started 10/29/2023 4:01:25 AM.
+      Build started 10/31/2023 6:14:25 AM.
       
       Project "D:\\OneDrive\\NEU\\CS5330 Computer Vision\\cs5330-hws\\Project4\\build\\CMakeFiles\\3.27.5\\CompilerIdCXX\\CompilerIdCXX.vcxproj" on node 1 (default targets).
       PrepareForBuild:
@@ -106,7 +106,7 @@ events:
           0 Warning(s)
           0 Error(s)
       
-      Time Elapsed 00:00:01.48
+      Time Elapsed 00:00:00.82
       
       
       Compilation of the CXX compiler identification source "CMakeCXXCompilerId.cpp" produced "CompilerIdCXX.exe"
@@ -125,47 +125,47 @@ events:
     checks:
       - "Detecting C compiler ABI info"
     directories:
-      source: "D:/OneDrive/NEU/CS5330 Computer Vision/cs5330-hws/Project4/build/CMakeFiles/CMakeScratch/TryCompile-eynd11"
-      binary: "D:/OneDrive/NEU/CS5330 Computer Vision/cs5330-hws/Project4/build/CMakeFiles/CMakeScratch/TryCompile-eynd11"
+      source: "D:/OneDrive/NEU/CS5330 Computer Vision/cs5330-hws/Project4/build/CMakeFiles/CMakeScratch/TryCompile-13r03s"
+      binary: "D:/OneDrive/NEU/CS5330 Computer Vision/cs5330-hws/Project4/build/CMakeFiles/CMakeScratch/TryCompile-13r03s"
     cmakeVariables:
       CMAKE_C_FLAGS: "/DWIN32 /D_WINDOWS /W3"
     buildResult:
       variable: "CMAKE_C_ABI_COMPILED"
       cached: true
       stdout: |
-        Change Dir: 'D:/OneDrive/NEU/CS5330 Computer Vision/cs5330-hws/Project4/build/CMakeFiles/CMakeScratch/TryCompile-eynd11'
+        Change Dir: 'D:/OneDrive/NEU/CS5330 Computer Vision/cs5330-hws/Project4/build/CMakeFiles/CMakeScratch/TryCompile-13r03s'
         
-        Run Build Command(s): "C:/Program Files/Microsoft Visual Studio/2022/Community/MSBuild/Current/Bin/amd64/MSBuild.exe" cmTC_be8aa.vcxproj /p:Configuration=Debug /p:Platform=x64 /p:VisualStudioVersion=17.0 /v:n
+        Run Build Command(s): "C:/Program Files/Microsoft Visual Studio/2022/Community/MSBuild/Current/Bin/amd64/MSBuild.exe" cmTC_400f2.vcxproj /p:Configuration=Debug /p:Platform=x64 /p:VisualStudioVersion=17.0 /v:n
         MSBuild version 17.7.2+d6990bcfa for .NET Framework
-        Build started 10/29/2023 4:01:26 AM.
+        Build started 10/31/2023 6:14:26 AM.
         
-        Project "D:\\OneDrive\\NEU\\CS5330 Computer Vision\\cs5330-hws\\Project4\\build\\CMakeFiles\\CMakeScratch\\TryCompile-eynd11\\cmTC_be8aa.vcxproj" on node 1 (default targets).
+        Project "D:\\OneDrive\\NEU\\CS5330 Computer Vision\\cs5330-hws\\Project4\\build\\CMakeFiles\\CMakeScratch\\TryCompile-13r03s\\cmTC_400f2.vcxproj" on node 1 (default targets).
         PrepareForBuild:
-          Creating directory "cmTC_be8aa.dir\\Debug\\".
-          Creating directory "D:\\OneDrive\\NEU\\CS5330 Computer Vision\\cs5330-hws\\Project4\\build\\CMakeFiles\\CMakeScratch\\TryCompile-eynd11\\Debug\\".
-          Creating directory "cmTC_be8aa.dir\\Debug\\cmTC_be8aa.tlog\\".
+          Creating directory "cmTC_400f2.dir\\Debug\\".
+          Creating directory "D:\\OneDrive\\NEU\\CS5330 Computer Vision\\cs5330-hws\\Project4\\build\\CMakeFiles\\CMakeScratch\\TryCompile-13r03s\\Debug\\".
+          Creating directory "cmTC_400f2.dir\\Debug\\cmTC_400f2.tlog\\".
         InitializeBuildStatus:
-          Creating "cmTC_be8aa.dir\\Debug\\cmTC_be8aa.tlog\\unsuccessfulbuild" because "AlwaysCreate" was specified.
-          Touching "cmTC_be8aa.dir\\Debug\\cmTC_be8aa.tlog\\unsuccessfulbuild".
+          Creating "cmTC_400f2.dir\\Debug\\cmTC_400f2.tlog\\unsuccessfulbuild" because "AlwaysCreate" was specified.
+          Touching "cmTC_400f2.dir\\Debug\\cmTC_400f2.tlog\\unsuccessfulbuild".
         ClCompile:
-          C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.37.32822\\bin\\HostX86\\x64\\CL.exe /c /Zi /W3 /WX- /diagnostics:column /Od /Ob0 /D _MBCS /D WIN32 /D _WINDOWS /D "CMAKE_INTDIR=\\"Debug\\"" /Gm- /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Zc:inline /Fo"cmTC_be8aa.dir\\Debug\\\\" /Fd"cmTC_be8aa.dir\\Debug\\vc143.pdb" /external:W3 /Gd /TC /errorReport:queue "C:\\Program Files\\CMake\\share\\cmake-3.27\\Modules\\CMakeCCompilerABI.c"
+          C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.37.32822\\bin\\HostX86\\x64\\CL.exe /c /Zi /W3 /WX- /diagnostics:column /Od /Ob0 /D _MBCS /D WIN32 /D _WINDOWS /D "CMAKE_INTDIR=\\"Debug\\"" /Gm- /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Zc:inline /Fo"cmTC_400f2.dir\\Debug\\\\" /Fd"cmTC_400f2.dir\\Debug\\vc143.pdb" /external:W3 /Gd /TC /errorReport:queue "C:\\Program Files\\CMake\\share\\cmake-3.27\\Modules\\CMakeCCompilerABI.c"
           Microsoft (R) C/C++ Optimizing Compiler Version 19.37.32824 for x64
           CMakeCCompilerABI.c
           Copyright (C) Microsoft Corporation.  All rights reserved.
-          cl /c /Zi /W3 /WX- /diagnostics:column /Od /Ob0 /D _MBCS /D WIN32 /D _WINDOWS /D "CMAKE_INTDIR=\\"Debug\\"" /Gm- /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Zc:inline /Fo"cmTC_be8aa.dir\\Debug\\\\" /Fd"cmTC_be8aa.dir\\Debug\\vc143.pdb" /external:W3 /Gd /TC /errorReport:queue "C:\\Program Files\\CMake\\share\\cmake-3.27\\Modules\\CMakeCCompilerABI.c"
+          cl /c /Zi /W3 /WX- /diagnostics:column /Od /Ob0 /D _MBCS /D WIN32 /D _WINDOWS /D "CMAKE_INTDIR=\\"Debug\\"" /Gm- /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Zc:inline /Fo"cmTC_400f2.dir\\Debug\\\\" /Fd"cmTC_400f2.dir\\Debug\\vc143.pdb" /external:W3 /Gd /TC /errorReport:queue "C:\\Program Files\\CMake\\share\\cmake-3.27\\Modules\\CMakeCCompilerABI.c"
         Link:
-          C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.37.32822\\bin\\HostX86\\x64\\link.exe /ERRORREPORT:QUEUE /OUT:"D:\\OneDrive\\NEU\\CS5330 Computer Vision\\cs5330-hws\\Project4\\build\\CMakeFiles\\CMakeScratch\\TryCompile-eynd11\\Debug\\cmTC_be8aa.exe" /INCREMENTAL /ILK:"cmTC_be8aa.dir\\Debug\\cmTC_be8aa.ilk" /NOLOGO kernel32.lib user32.lib gdi32.lib winspool.lib shell32.lib ole32.lib oleaut32.lib uuid.lib comdlg32.lib advapi32.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /DEBUG /PDB:"D:/OneDrive/NEU/CS5330 Computer Vision/cs5330-hws/Project4/build/CMakeFiles/CMakeScratch/TryCompile-eynd11/Debug/cmTC_be8aa.pdb" /SUBSYSTEM:CONSOLE /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"D:/OneDrive/NEU/CS5330 Computer Vision/cs5330-hws/Project4/build/CMakeFiles/CMakeScratch/TryCompile-eynd11/Debug/cmTC_be8aa.lib" /MACHINE:X64  /machine:x64 cmTC_be8aa.dir\\Debug\\CMakeCCompilerABI.obj
-          cmTC_be8aa.vcxproj -> D:\\OneDrive\\NEU\\CS5330 Computer Vision\\cs5330-hws\\Project4\\build\\CMakeFiles\\CMakeScratch\\TryCompile-eynd11\\Debug\\cmTC_be8aa.exe
+          C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.37.32822\\bin\\HostX86\\x64\\link.exe /ERRORREPORT:QUEUE /OUT:"D:\\OneDrive\\NEU\\CS5330 Computer Vision\\cs5330-hws\\Project4\\build\\CMakeFiles\\CMakeScratch\\TryCompile-13r03s\\Debug\\cmTC_400f2.exe" /INCREMENTAL /ILK:"cmTC_400f2.dir\\Debug\\cmTC_400f2.ilk" /NOLOGO kernel32.lib user32.lib gdi32.lib winspool.lib shell32.lib ole32.lib oleaut32.lib uuid.lib comdlg32.lib advapi32.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /DEBUG /PDB:"D:/OneDrive/NEU/CS5330 Computer Vision/cs5330-hws/Project4/build/CMakeFiles/CMakeScratch/TryCompile-13r03s/Debug/cmTC_400f2.pdb" /SUBSYSTEM:CONSOLE /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"D:/OneDrive/NEU/CS5330 Computer Vision/cs5330-hws/Project4/build/CMakeFiles/CMakeScratch/TryCompile-13r03s/Debug/cmTC_400f2.lib" /MACHINE:X64  /machine:x64 cmTC_400f2.dir\\Debug\\CMakeCCompilerABI.obj
+          cmTC_400f2.vcxproj -> D:\\OneDrive\\NEU\\CS5330 Computer Vision\\cs5330-hws\\Project4\\build\\CMakeFiles\\CMakeScratch\\TryCompile-13r03s\\Debug\\cmTC_400f2.exe
         FinalizeBuildStatus:
-          Deleting file "cmTC_be8aa.dir\\Debug\\cmTC_be8aa.tlog\\unsuccessfulbuild".
-          Touching "cmTC_be8aa.dir\\Debug\\cmTC_be8aa.tlog\\cmTC_be8aa.lastbuildstate".
-        Done Building Project "D:\\OneDrive\\NEU\\CS5330 Computer Vision\\cs5330-hws\\Project4\\build\\CMakeFiles\\CMakeScratch\\TryCompile-eynd11\\cmTC_be8aa.vcxproj" (default targets).
+          Deleting file "cmTC_400f2.dir\\Debug\\cmTC_400f2.tlog\\unsuccessfulbuild".
+          Touching "cmTC_400f2.dir\\Debug\\cmTC_400f2.tlog\\cmTC_400f2.lastbuildstate".
+        Done Building Project "D:\\OneDrive\\NEU\\CS5330 Computer Vision\\cs5330-hws\\Project4\\build\\CMakeFiles\\CMakeScratch\\TryCompile-13r03s\\cmTC_400f2.vcxproj" (default targets).
         
         Build succeeded.
             0 Warning(s)
             0 Error(s)
         
-        Time Elapsed 00:00:01.50
+        Time Elapsed 00:00:00.80
         
       exitCode: 0
   -
@@ -177,47 +177,47 @@ events:
     checks:
       - "Detecting CXX compiler ABI info"
     directories:
-      source: "D:/OneDrive/NEU/CS5330 Computer Vision/cs5330-hws/Project4/build/CMakeFiles/CMakeScratch/TryCompile-qpe8zp"
-      binary: "D:/OneDrive/NEU/CS5330 Computer Vision/cs5330-hws/Project4/build/CMakeFiles/CMakeScratch/TryCompile-qpe8zp"
+      source: "D:/OneDrive/NEU/CS5330 Computer Vision/cs5330-hws/Project4/build/CMakeFiles/CMakeScratch/TryCompile-ae1skr"
+      binary: "D:/OneDrive/NEU/CS5330 Computer Vision/cs5330-hws/Project4/build/CMakeFiles/CMakeScratch/TryCompile-ae1skr"
     cmakeVariables:
       CMAKE_CXX_FLAGS: "/DWIN32 /D_WINDOWS /W3 /GR /EHsc"
     buildResult:
       variable: "CMAKE_CXX_ABI_COMPILED"
       cached: true
       stdout: |
-        Change Dir: 'D:/OneDrive/NEU/CS5330 Computer Vision/cs5330-hws/Project4/build/CMakeFiles/CMakeScratch/TryCompile-qpe8zp'
+        Change Dir: 'D:/OneDrive/NEU/CS5330 Computer Vision/cs5330-hws/Project4/build/CMakeFiles/CMakeScratch/TryCompile-ae1skr'
         
-        Run Build Command(s): "C:/Program Files/Microsoft Visual Studio/2022/Community/MSBuild/Current/Bin/amd64/MSBuild.exe" cmTC_f352a.vcxproj /p:Configuration=Debug /p:Platform=x64 /p:VisualStudioVersion=17.0 /v:n
+        Run Build Command(s): "C:/Program Files/Microsoft Visual Studio/2022/Community/MSBuild/Current/Bin/amd64/MSBuild.exe" cmTC_1d007.vcxproj /p:Configuration=Debug /p:Platform=x64 /p:VisualStudioVersion=17.0 /v:n
         MSBuild version 17.7.2+d6990bcfa for .NET Framework
-        Build started 10/29/2023 4:01:28 AM.
+        Build started 10/31/2023 6:14:27 AM.
         
-        Project "D:\\OneDrive\\NEU\\CS5330 Computer Vision\\cs5330-hws\\Project4\\build\\CMakeFiles\\CMakeScratch\\TryCompile-qpe8zp\\cmTC_f352a.vcxproj" on node 1 (default targets).
+        Project "D:\\OneDrive\\NEU\\CS5330 Computer Vision\\cs5330-hws\\Project4\\build\\CMakeFiles\\CMakeScratch\\TryCompile-ae1skr\\cmTC_1d007.vcxproj" on node 1 (default targets).
         PrepareForBuild:
-          Creating directory "cmTC_f352a.dir\\Debug\\".
-          Creating directory "D:\\OneDrive\\NEU\\CS5330 Computer Vision\\cs5330-hws\\Project4\\build\\CMakeFiles\\CMakeScratch\\TryCompile-qpe8zp\\Debug\\".
-          Creating directory "cmTC_f352a.dir\\Debug\\cmTC_f352a.tlog\\".
+          Creating directory "cmTC_1d007.dir\\Debug\\".
+          Creating directory "D:\\OneDrive\\NEU\\CS5330 Computer Vision\\cs5330-hws\\Project4\\build\\CMakeFiles\\CMakeScratch\\TryCompile-ae1skr\\Debug\\".
+          Creating directory "cmTC_1d007.dir\\Debug\\cmTC_1d007.tlog\\".
         InitializeBuildStatus:
-          Creating "cmTC_f352a.dir\\Debug\\cmTC_f352a.tlog\\unsuccessfulbuild" because "AlwaysCreate" was specified.
-          Touching "cmTC_f352a.dir\\Debug\\cmTC_f352a.tlog\\unsuccessfulbuild".
+          Creating "cmTC_1d007.dir\\Debug\\cmTC_1d007.tlog\\unsuccessfulbuild" because "AlwaysCreate" was specified.
+          Touching "cmTC_1d007.dir\\Debug\\cmTC_1d007.tlog\\unsuccessfulbuild".
         ClCompile:
-          C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.37.32822\\bin\\HostX86\\x64\\CL.exe /c /Zi /W3 /WX- /diagnostics:column /Od /Ob0 /D _MBCS /D WIN32 /D _WINDOWS /D "CMAKE_INTDIR=\\"Debug\\"" /Gm- /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Zc:inline /GR /Fo"cmTC_f352a.dir\\Debug\\\\" /Fd"cmTC_f352a.dir\\Debug\\vc143.pdb" /external:W3 /Gd /TP /errorReport:queue "C:\\Program Files\\CMake\\share\\cmake-3.27\\Modules\\CMakeCXXCompilerABI.cpp"
+          C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.37.32822\\bin\\HostX86\\x64\\CL.exe /c /Zi /W3 /WX- /diagnostics:column /Od /Ob0 /D _MBCS /D WIN32 /D _WINDOWS /D "CMAKE_INTDIR=\\"Debug\\"" /Gm- /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Zc:inline /GR /Fo"cmTC_1d007.dir\\Debug\\\\" /Fd"cmTC_1d007.dir\\Debug\\vc143.pdb" /external:W3 /Gd /TP /errorReport:queue "C:\\Program Files\\CMake\\share\\cmake-3.27\\Modules\\CMakeCXXCompilerABI.cpp"
           Microsoft (R) C/C++ Optimizing Compiler Version 19.37.32824 for x64
           CMakeCXXCompilerABI.cpp
           Copyright (C) Microsoft Corporation.  All rights reserved.
-          cl /c /Zi /W3 /WX- /diagnostics:column /Od /Ob0 /D _MBCS /D WIN32 /D _WINDOWS /D "CMAKE_INTDIR=\\"Debug\\"" /Gm- /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Zc:inline /GR /Fo"cmTC_f352a.dir\\Debug\\\\" /Fd"cmTC_f352a.dir\\Debug\\vc143.pdb" /external:W3 /Gd /TP /errorReport:queue "C:\\Program Files\\CMake\\share\\cmake-3.27\\Modules\\CMakeCXXCompilerABI.cpp"
+          cl /c /Zi /W3 /WX- /diagnostics:column /Od /Ob0 /D _MBCS /D WIN32 /D _WINDOWS /D "CMAKE_INTDIR=\\"Debug\\"" /Gm- /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Zc:inline /GR /Fo"cmTC_1d007.dir\\Debug\\\\" /Fd"cmTC_1d007.dir\\Debug\\vc143.pdb" /external:W3 /Gd /TP /errorReport:queue "C:\\Program Files\\CMake\\share\\cmake-3.27\\Modules\\CMakeCXXCompilerABI.cpp"
         Link:
-          C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.37.32822\\bin\\HostX86\\x64\\link.exe /ERRORREPORT:QUEUE /OUT:"D:\\OneDrive\\NEU\\CS5330 Computer Vision\\cs5330-hws\\Project4\\build\\CMakeFiles\\CMakeScratch\\TryCompile-qpe8zp\\Debug\\cmTC_f352a.exe" /INCREMENTAL /ILK:"cmTC_f352a.dir\\Debug\\cmTC_f352a.ilk" /NOLOGO kernel32.lib user32.lib gdi32.lib winspool.lib shell32.lib ole32.lib oleaut32.lib uuid.lib comdlg32.lib advapi32.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /DEBUG /PDB:"D:/OneDrive/NEU/CS5330 Computer Vision/cs5330-hws/Project4/build/CMakeFiles/CMakeScratch/TryCompile-qpe8zp/Debug/cmTC_f352a.pdb" /SUBSYSTEM:CONSOLE /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"D:/OneDrive/NEU/CS5330 Computer Vision/cs5330-hws/Project4/build/CMakeFiles/CMakeScratch/TryCompile-qpe8zp/Debug/cmTC_f352a.lib" /MACHINE:X64  /machine:x64 cmTC_f352a.dir\\Debug\\CMakeCXXCompilerABI.obj
-          cmTC_f352a.vcxproj -> D:\\OneDrive\\NEU\\CS5330 Computer Vision\\cs5330-hws\\Project4\\build\\CMakeFiles\\CMakeScratch\\TryCompile-qpe8zp\\Debug\\cmTC_f352a.exe
+          C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.37.32822\\bin\\HostX86\\x64\\link.exe /ERRORREPORT:QUEUE /OUT:"D:\\OneDrive\\NEU\\CS5330 Computer Vision\\cs5330-hws\\Project4\\build\\CMakeFiles\\CMakeScratch\\TryCompile-ae1skr\\Debug\\cmTC_1d007.exe" /INCREMENTAL /ILK:"cmTC_1d007.dir\\Debug\\cmTC_1d007.ilk" /NOLOGO kernel32.lib user32.lib gdi32.lib winspool.lib shell32.lib ole32.lib oleaut32.lib uuid.lib comdlg32.lib advapi32.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /DEBUG /PDB:"D:/OneDrive/NEU/CS5330 Computer Vision/cs5330-hws/Project4/build/CMakeFiles/CMakeScratch/TryCompile-ae1skr/Debug/cmTC_1d007.pdb" /SUBSYSTEM:CONSOLE /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"D:/OneDrive/NEU/CS5330 Computer Vision/cs5330-hws/Project4/build/CMakeFiles/CMakeScratch/TryCompile-ae1skr/Debug/cmTC_1d007.lib" /MACHINE:X64  /machine:x64 cmTC_1d007.dir\\Debug\\CMakeCXXCompilerABI.obj
+          cmTC_1d007.vcxproj -> D:\\OneDrive\\NEU\\CS5330 Computer Vision\\cs5330-hws\\Project4\\build\\CMakeFiles\\CMakeScratch\\TryCompile-ae1skr\\Debug\\cmTC_1d007.exe
         FinalizeBuildStatus:
-          Deleting file "cmTC_f352a.dir\\Debug\\cmTC_f352a.tlog\\unsuccessfulbuild".
-          Touching "cmTC_f352a.dir\\Debug\\cmTC_f352a.tlog\\cmTC_f352a.lastbuildstate".
-        Done Building Project "D:\\OneDrive\\NEU\\CS5330 Computer Vision\\cs5330-hws\\Project4\\build\\CMakeFiles\\CMakeScratch\\TryCompile-qpe8zp\\cmTC_f352a.vcxproj" (default targets).
+          Deleting file "cmTC_1d007.dir\\Debug\\cmTC_1d007.tlog\\unsuccessfulbuild".
+          Touching "cmTC_1d007.dir\\Debug\\cmTC_1d007.tlog\\cmTC_1d007.lastbuildstate".
+        Done Building Project "D:\\OneDrive\\NEU\\CS5330 Computer Vision\\cs5330-hws\\Project4\\build\\CMakeFiles\\CMakeScratch\\TryCompile-ae1skr\\cmTC_1d007.vcxproj" (default targets).
         
         Build succeeded.
             0 Warning(s)
             0 Error(s)
         
-        Time Elapsed 00:00:01.11
+        Time Elapsed 00:00:00.78
         
       exitCode: 0
 ...

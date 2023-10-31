@@ -12,6 +12,9 @@
     <ClInclude Include="D:\OneDrive\NEU\CS5330 Computer Vision\cs5330-hws\Project4\utils.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="D:\OneDrive\NEU\CS5330 Computer Vision\cs5330-hws\Project4\objLoader.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <CustomBuild Include="D:\OneDrive\NEU\CS5330 Computer Vision\cs5330-hws\Project4\CMakeLists.txt" />

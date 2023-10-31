@@ -3,6 +3,7 @@
 #include <opencv2/imgproc.hpp>
 #include <iostream>
 #include "utils.h"
+#include "objLoader.h"
 
 using namespace std;
 using namespace cv;
@@ -67,9 +68,9 @@ int main(int argc, char *argv[])
     }
     cout << "save path is " << defaultSavePath << endl;
 
-    Mat capturedFrame;
-    Mat tempFrame;
-    Mat displayFrame;
+    cv::Mat capturedFrame;
+    cv::Mat tempFrame;
+    cv::Mat displayFrame;
 
     // Initialize all boolean flags for display option
     bool demo = false;
@@ -77,13 +78,14 @@ int main(int argc, char *argv[])
 
     cv::VideoWriter videoWriter;
     // Read the camera matrix and dist coeffs from file
-    Mat cameraMatrix;
-    Mat distCoeffs;
+    cv::Mat cameraMatrix;
+    cv::Mat distCoeffs;
     readIntrinsic(cameraMatrix, distCoeffs, defaultSavePath);
-    Mat rvec;
-    Mat tvec;
-    vector<cv::Vec3f> point_set;
-    vector<Point2f> corner_set; // this will be filled by the detected corners
+    cv::Mat rvec;
+    cv::Mat tvec;
+    std::vector<cv::Vec3f> point_set;
+    std::vector<Point2f> corner_set; // this will be filled by the detected corners
+
     for (int y = 0; y < 6; y++)
     {
         for (int x = 0; x < 9; x++)
@@ -93,12 +95,14 @@ int main(int argc, char *argv[])
         }
     }
 
-    vector<cv::Vec3f> objectPoints;
+    std::vector<cv::Vec3f> objectPoints;
     objectPoints.push_back(Vec3f(4.5, 2.5, 0));  // Center
     objectPoints.push_back(Vec3f(9, 2.5, 0));    // x-edge
     objectPoints.push_back(Vec3f(4.5, 6, 0));    // y-edge
     objectPoints.push_back(Vec3f(4.5, 2.5, -5)); // z-edge
-    vector<Point2f> arPoints;
+    std::vector<Point2f> arPoints;
+    OBJStruct object;
+    object.loadFile("C:/CS5330_Assets/Project4/Jeep.obj");
 
     // Run the while loop
     while (true)
@@ -135,6 +139,7 @@ int main(int argc, char *argv[])
                 drawChessboardCorners(displayFrame, patternsize, Mat(corner_set), patternfound);
             }
             projectPoints(objectPoints, rvec, tvec, cameraMatrix, distCoeffs, arPoints);
+            object.projectObject(displayFrame, cameraMatrix, distCoeffs, rvec, tvec);
             cv::arrowedLine(displayFrame, arPoints[0], arPoints[1], Scalar(255, 0, 0), 5);
             cv::arrowedLine(displayFrame, arPoints[0], arPoints[2], Scalar(0, 255, 0), 5);
             cv::arrowedLine(displayFrame, arPoints[0], arPoints[3], Scalar(0, 0, 255), 5);
