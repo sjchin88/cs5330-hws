@@ -1,0 +1,27 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="17.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <ClCompile Include="D:\OneDrive\NEU\CS5330 Computer Vision\cs5330-hws\Project4\calibrateCamera.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="D:\OneDrive\NEU\CS5330 Computer Vision\cs5330-hws\Project4\utils.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="D:\OneDrive\NEU\CS5330 Computer Vision\cs5330-hws\Project4\utils.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <CustomBuild Include="D:\OneDrive\NEU\CS5330 Computer Vision\cs5330-hws\Project4\CMakeLists.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="Header Files">
+      <UniqueIdentifier>{6C538405-9FE2-36F0-9594-20F761345F1A}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{0C267602-47A7-3E0A-9176-9072DD4FBFEA}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+</Project>
