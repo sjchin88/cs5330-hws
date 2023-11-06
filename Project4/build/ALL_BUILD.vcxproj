@@ -173,13 +173,17 @@ if %errorlevel% neq 0 goto :VCEnd</Command>
       <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>
     </ProjectReference>
-    <ProjectReference Include="D:\OneDrive\NEU\CS5330 Computer Vision\cs5330-hws\Project4\build\calibrateProg.vcxproj">
-      <Project>{448E8566-DBA0-37CA-897B-FC83C41340F9}</Project>
-      <Name>calibrateProg</Name>
+    <ProjectReference Include="D:\OneDrive\NEU\CS5330 Computer Vision\cs5330-hws\Project4\build\calibrateCamera.vcxproj">
+      <Project>{901D47B4-87B8-368A-8F6D-F60C11C6A664}</Project>
+      <Name>calibrateCamera</Name>
     </ProjectReference>
     <ProjectReference Include="D:\OneDrive\NEU\CS5330 Computer Vision\cs5330-hws\Project4\build\displayAR.vcxproj">
       <Project>{A53610B6-136F-3909-A696-C8AADF5BD512}</Project>
       <Name>displayAR</Name>
+    </ProjectReference>
+    <ProjectReference Include="D:\OneDrive\NEU\CS5330 Computer Vision\cs5330-hws\Project4\build\harrisCorner.vcxproj">
+      <Project>{8F121D36-5911-3024-9FAA-A1BABC53370A}</Project>
+      <Name>harrisCorner</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

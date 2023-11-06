@@ -9,15 +9,20 @@ find_package( OpenCV REQUIRED )
 include_directories( ${OpenCV_INCLUDE_DIRS} )
 
 
-add_executable(calibrateProg calibrateProg.cpp 
+add_executable(calibrateCamera calibrateCamera.cpp 
     utils.h utils.cpp
 )
-target_link_libraries( calibrateProg ${OpenCV_LIBS} )
+target_link_libraries( calibrateCamera ${OpenCV_LIBS} )
 
 add_executable(displayAR displayAR.cpp 
-    utils.h utils.cpp
+    utils.h utils.cpp objLoader.h
 )
 target_link_libraries( displayAR ${OpenCV_LIBS} )
+
+add_executable(harrisCorner harrisCorner.cpp 
+    utils.h utils.cpp objLoader.h
+)
+target_link_libraries( harrisCorner ${OpenCV_LIBS} )
 
 set(CPACK_PROJECT_NAME ${PROJECT_NAME})
 set(CPACK_PROJECT_VERSION ${PROJECT_VERSION})

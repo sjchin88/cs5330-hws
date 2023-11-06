@@ -5,10 +5,13 @@
       <FullPath>D:\OneDrive\NEU\CS5330 Computer Vision\cs5330-hws\Project4\build\x64\Debug\ZERO_CHECK</FullPath>
     </ProjectOutput>
     <ProjectOutput>
-      <FullPath>D:\OneDrive\NEU\CS5330 Computer Vision\cs5330-hws\Project4\build\Debug\calibrateProg.exe</FullPath>
+      <FullPath>D:\OneDrive\NEU\CS5330 Computer Vision\cs5330-hws\Project4\build\Debug\calibrateCamera.exe</FullPath>
     </ProjectOutput>
     <ProjectOutput>
       <FullPath>D:\OneDrive\NEU\CS5330 Computer Vision\cs5330-hws\Project4\build\Debug\displayAR.exe</FullPath>
+    </ProjectOutput>
+    <ProjectOutput>
+      <FullPath>D:\OneDrive\NEU\CS5330 Computer Vision\cs5330-hws\Project4\build\Debug\harrisCorner.exe</FullPath>
     </ProjectOutput>
     <ProjectOutput>
       <FullPath>D:\OneDrive\NEU\CS5330 Computer Vision\cs5330-hws\Project4\build\x64\Debug\ALL_BUILD</FullPath>
