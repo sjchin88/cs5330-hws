@@ -9,6 +9,11 @@
             "type": "python",
             "request": "launch",
             "program": "${file}",
+            "args": [
+                //"--help"
+                "-save", "C:/CS5330_Assets/Project5a",
+                "-input", "C:/CS5330_Assets/Project5a/files/new_input/",
+            ],
             "console": "integratedTerminal",
             "justMyCode": true
         }

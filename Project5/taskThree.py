@@ -50,6 +50,19 @@ class MyNetwork(nn.Module):
         x = self.fc2(x)
         return F.log_softmax(x)
 
+# greek data set transform
+
+
+class GreekTransform:
+    def __init__(self):
+        pass
+
+    def __call__(self, x):
+        x = torchvision.transforms.functional.rgb_to_grayscale(x)
+        x = torchvision.transforms.functional.affine(x, 0, (0, 0), 36/128, 0)
+        x = torchvision.transforms.functional.resize(x, (28, 28))
+        return torchvision.transforms.functional.invert(x)
+
 
 def train_network(network, optimizer, save_path, train_loader, epoch, log_interval, train_losses, train_counter):
     """_summary_
@@ -66,26 +79,38 @@ def train_network(network, optimizer, save_path, train_loader, epoch, log_interv
     """
     network.train()
     result_save_path = save_path + "/results/"
+
+    # Make directory of result path
     if not os.path.exists(result_save_path):
         os.makedirs(result_save_path)
+
+    # Go through each batch
     for batch_idx, (data, target) in enumerate(train_loader):
+
+        # Get the loss
         output = network(data)
         loss = F.nll_loss(output, target)
+
+        # Propagate backward
         loss.backward()
         optimizer.step()
+        # Reset grad to zero
         optimizer.zero_grad()
 
+        # Log interval data
         if batch_idx % log_interval == 0:
+            """
             print('Train Epoch: {} [{}/{} ({:.0f}%)]\tLoss: {:.6f}'.format(
                 epoch, batch_idx * len(data), len(train_loader.dataset),
                 100. * batch_idx / len(train_loader), loss.item()))
+            """
             train_losses.append(loss.item())
             train_counter.append(
-                (batch_idx*64) + ((epoch-1)*len(train_loader.dataset)))
+                (batch_idx*5) + ((epoch-1)*len(train_loader.dataset)))
             torch.save(network.state_dict(),
-                       result_save_path + 'model.pth')
+                       result_save_path + 'modelGr.pth')
             torch.save(optimizer.state_dict(),
-                       result_save_path + 'optimizer.pth')
+                       result_save_path + 'optimizerGr.pth')
     return None
 
 
@@ -108,10 +133,34 @@ def test_network(network, test_loader, test_losses):
             correct += pred.eq(target.data.view_as(pred)).sum()
     test_loss /= len(test_loader.dataset)
     test_losses.append(test_loss)
+    """
     print('\nTest set: Avg. loss: {:.4f}, Accuracy: {}/{} ({:.0f}%)\n'.format(
         test_loss, correct, len(test_loader.dataset),
         100. * correct / len(test_loader.dataset)))
-    return None
+        """
+    return correct
+
+
+def get_parser():
+    """Helper function to build and return the parser for this program
+    """
+    parser = argparse.ArgumentParser(
+        description="Process Command Line Arguments")
+    parser.add_argument(
+        '-save', help='full absolute path of save directory for data and model')
+    parser.add_argument(
+        '-nepochs', help='number of epochs', type=int, default=200)
+    parser.add_argument(
+        '-train_size', help='batch size for training set', type=int,  default=64)
+    parser.add_argument(
+        '-test_size', help='batch size for test set', type=int,  default=1000)
+    parser.add_argument(
+        '-lrate', help='learning rate', type=float, default=0.01)
+    parser.add_argument(
+        '-momentum', help='momentum', type=float, default=0.5)
+    parser.add_argument(
+        '-log_int', help='log interval', type=int, default=5)
+    return parser
 
 
 def show_example(loader):
@@ -126,37 +175,15 @@ def show_example(loader):
     example_data.shape
 
     fig = plt.figure()
-    for i in range(6):
+    for i in range(5):
         plt.subplot(2, 3, i+1)
         plt.tight_layout()
         plt.imshow(example_data[i][0], cmap='gray', interpolation='none')
-        plt.title("Example digit: {}".format(example_targets[i]))
+        plt.title("Example Greek: {}".format(example_targets[i]))
         plt.xticks([])
         plt.yticks([])
     plt.show()
     return None
-
-
-def get_parser():
-    """Helper function to build and return the parser for this program
-    """
-    parser = argparse.ArgumentParser(
-        description="Process Command Line Arguments")
-    parser.add_argument(
-        '-save', help='full absolute path of save directory for data and model')
-    parser.add_argument(
-        '-nepochs', help='number of epochs', type=int, default=5)
-    parser.add_argument(
-        '-train_size', help='batch size for training set', type=int,  default=64)
-    parser.add_argument(
-        '-test_size', help='batch size for test set', type=int,  default=1000)
-    parser.add_argument(
-        '-lrate', help='learning rate', type=float, default=0.01)
-    parser.add_argument(
-        '-momentum', help='momentum', type=float, default=0.5)
-    parser.add_argument(
-        '-log_int', help='log interval', type=int, default=10)
-    return parser
 
 
 def plot_performance(train_losses, train_counter, test_losses, test_counter):
@@ -199,45 +226,67 @@ def main(argv):
     torch.manual_seed(random_seed)
 
     # Load the data set
-    data_save_path = save_path + "/files/"
+    data_save_path = save_path + "/files/greek_train/"
     if not os.path.exists(data_save_path):
         os.makedirs(data_save_path)
-    train_loader = torch.utils.data.DataLoader(
-        torchvision.datasets.MNIST(data_save_path, train=True, download=True,
-                                   transform=torchvision.transforms.Compose([
-                                       torchvision.transforms.ToTensor(),
-                                       torchvision.transforms.Normalize(
-                                           (0.1307,), (0.3081,))
-                                   ])), batch_size=batch_size_train, shuffle=True)
-
-    test_loader = torch.utils.data.DataLoader(
-        torchvision.datasets.MNIST(data_save_path, train=False, download=True,
-                                   transform=torchvision.transforms.Compose([
-                                       torchvision.transforms.ToTensor(),
-                                       torchvision.transforms.Normalize(
-                                           (0.1307,), (0.3081,))
-                                   ])), batch_size=batch_size_test, shuffle=True)
-    show_example(loader=train_loader)
+     # DataLoader for the Greek data set
+    greek_train = torch.utils.data.DataLoader(
+        torchvision.datasets.ImageFolder(data_save_path,
+                                         transform=torchvision.transforms.Compose([torchvision.transforms.ToTensor(),
+                                                                                   GreekTransform(),
+                                                                                   torchvision.transforms.Normalize(
+                                             (0.1307,), (0.3081,))])),
+        batch_size=27,
+        shuffle=True)
+    # show_example(loader=greek_train)
 
     # Initialize the network, optimizer, and arrays to store train_loss, train_counter
-    # test_loss, test counter
-    network = MyNetwork()
-    optimizer = optim.SGD(network.parameters(), lr=learning_rate,
-                          momentum=momentum)
+    # Check if path exist
+    result_save_path = save_path + "/results/"
+    if not os.path.exists(result_save_path):
+        print("invalid directory")
+        return None
+
+    # Initialize the network and optimizer
+    trained_network = MyNetwork()
+
+    # Load the pretrained model
+    network_state_dict = torch.load(result_save_path + "model.pth")
+    trained_network.load_state_dict(network_state_dict)
+    optimizer_state_dict = torch.load(result_save_path + "optimizer.pth")
+    trained_optimizer.load_state_dict(optimizer_state_dict)
+
+    # freezes the parameters for the whole network
+    for name, param in trained_network.named_parameters():
+        # print(param.)
+        param.requires_grad = False
+
+    # Replace the last classification layer
+    trained_network.fc2 = nn.Linear(50, 3)
+    trained_optimizer = optim.SGD(
+        trained_network.parameters(), lr=learning_rate, momentum=momentum)
+
     train_losses = []
     train_counter = []
     test_losses = []
-    test_counter = [i*len(train_loader.dataset) for i in range(n_epochs + 1)]
+    test_counter = [i*len(greek_train.dataset)
+                    for i in range(0, n_epochs + 1, 100)]
 
-    # Run the training
-    test_network(network, test_loader, test_losses)
+    test_network(trained_network, greek_train, test_losses)
     for epoch in range(1, n_epochs + 1):
-        train_network(network, optimizer, save_path, train_loader, epoch,
-                      log_interval, train_losses, train_counter)
-        test_network(network, test_loader, test_losses)
+        # Train the network
+        train_network(trained_network, trained_optimizer, save_path,
+                      greek_train, epoch, log_interval, train_losses, train_counter)
+        if epoch % 100 == 0:
+            # Get test result every 100 loops
+            correct = test_network(trained_network, greek_train, test_losses)
+            # if correct == len(greek_train.dataset):
+            #    break
 
-    # Plot the results
     plot_performance(train_losses, train_counter, test_losses, test_counter)
+    # print(trained_network)
+    # print(trained_network.fully_connect_1.weight)
+    # print(trained_network.fully_connect_2.weight)
     return
 
 
