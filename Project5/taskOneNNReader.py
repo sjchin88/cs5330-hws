@@ -2,7 +2,7 @@
 Class Name    : CS5330 Pattern Recognition and Computer Vision
 Session       : Fall 2023 (Seattle)
 Name          : Shiang Jin Chin
-Last Update   : 11/19/2023
+Last Update   : 11/21/2023
 Description   : python file containing code required for the first task to read the model
 """
 # import statements
@@ -17,6 +17,8 @@ import matplotlib.pyplot as plt
 import argparse
 import numpy as np
 from taskOne import MyNetwork
+
+# Parser function, change the default setting here
 
 
 def get_parser():
@@ -69,7 +71,7 @@ def main(argv):
     trained_optimizer.load_state_dict(optimizer_state_dict)
     trained_network.eval()
 
-    # Load the data set
+    # Load the test data set
     data_save_path = save_path + "/files/"
     if not os.path.exists(data_save_path):
         os.makedirs(data_save_path)
@@ -81,8 +83,11 @@ def main(argv):
                                            (0.1307,), (0.3081,))
                                    ])), batch_size=batch_size_test, shuffle=False)
     test_samples = enumerate(test_loader)
+
+    # Get the predicted result for the first 10
+    # and plot the first 9 examples
     batch_idx, (test_data, test_target) = next(test_samples)
-    fig = plt.figure()
+    plt.figure()
     for i in range(10):
         output = trained_network(test_data[i])
         # output.data is the tensor, convert to numpy array

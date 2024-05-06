@@ -2,7 +2,7 @@
 Class Name    : CS5330 Pattern Recognition and Computer Vision
 Session       : Fall 2023 (Seattle)
 Name          : Shiang Jin Chin
-Last Update   : 11/19/2023
+Last Update   : 11/22/2023
 Description   : python file containing code required for the second task to read the model
 """
 # import statements
@@ -68,13 +68,16 @@ def main(argv):
     trained_network.load_state_dict(network_state_dict)
     optimizer_state_dict = torch.load(result_save_path + "optimizer.pth")
     trained_optimizer.load_state_dict(optimizer_state_dict)
-    print(trained_network)
-    print(trained_network.convolution_1.weight)
 
-    fig = plt.figure()
+    # Print the network
+    print(trained_network)
+    print(trained_network.conv1.weight)
+
+    # Plot the filters for the first layer
+    plt.figure()
     with torch.no_grad():
         for i in range(10):
-            filter = trained_network.convolution_1.weight[i, 0]
+            filter = trained_network.conv1.weight[i, 0]
             # output.data is the tensor, convert to numpy array
             plt.subplot(4, 3, i+1)
             plt.tight_layout()
@@ -97,17 +100,23 @@ def main(argv):
                                    ])), batch_size=batch_size_train, shuffle=True)
     train_samples = enumerate(train_loader)
     batch_idx, (train_data, train_target) = next(train_samples)
-    # print(train_data[0][0])
+
     src_img = train_data[0][0].numpy()
-    # print(src_img)
-    fig = plt.figure()
+
+    # Plot the resulting images after applying the 10 filters
+    plt.figure(figsize=(10, 8))
     with torch.no_grad():
         for i in range(10):
-            filter = trained_network.convolution_1.weight[i, 0].numpy()
-            # output.data is the tensor, convert to numpy array
-            plt.subplot(4, 3, i+1)
+            filter = trained_network.conv1.weight[i, 0]
+
+            plt.subplot(5, 4, i*2+1)
             plt.tight_layout()
+            plt.imshow(filter, cmap='gray', interpolation='none')
+            filter = filter.numpy()
+            # output.data is the tensor, convert to numpy array
             filtered_img = cv2.filter2D(src_img, ddepth=-1, kernel=filter)
+            plt.subplot(5, 4, i*2+2)
+            plt.tight_layout()
             plt.imshow(filtered_img, cmap='gray', interpolation='none')
             plt.title("filter: {}".format(i+1))
             plt.xticks([])

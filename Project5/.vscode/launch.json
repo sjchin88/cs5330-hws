@@ -11,8 +11,10 @@
             "program": "${file}",
             "args": [
                 //"--help"
-                "-save", "C:/CS5330_Assets/Project5a",
-                "-input", "C:/CS5330_Assets/Project5a/files/new_input/",
+                "-save", "C:/CS5330_Assets/Project5c",
+                //"-model_dir", "C:/CS5330_Assets/Project5b",
+                //"-input", "C:/CS5330_Assets/Project5a/files/greek_train/",
+                //"-input_test", "C:/CS5330_Assets/Project5a/files/greek_test/",
             ],
             "console": "integratedTerminal",
             "justMyCode": true

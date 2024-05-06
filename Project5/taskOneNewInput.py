@@ -2,7 +2,7 @@
 Class Name    : CS5330 Pattern Recognition and Computer Vision
 Session       : Fall 2023 (Seattle)
 Name          : Shiang Jin Chin
-Last Update   : 11/19/2023
+Last Update   : 11/22/2023
 Description   : python file containing code required for the first task to read the model, 
                 and classify new images
 """
@@ -19,18 +19,36 @@ import argparse
 import numpy as np
 from taskOne import MyNetwork
 
-# greek data set transform
+
+# class to transform the new images
 
 
 class ImgTransform:
+    """class to transform the new images
+    """
+
     def __init__(self):
+        """Default constructor
+        """
         pass
 
     def __call__(self, x):
+        """Operations when called
+
+        Args:
+            x (array): representation of input image
+
+        Returns:
+            array: representation of output image
+        """
         x = torchvision.transforms.functional.rgb_to_grayscale(x)
+        # Resize to 128 x 128
         x = torchvision.transforms.functional.resize(x, (128, 128))
-        x = torchvision.transforms.functional.affine(x, 0, (0, 0), 36/128, 0)
-        x = torchvision.transforms.functional.center_crop(x, (28, 28))
+        # Move it to center, resize to 36 x 36 images
+        # x = torchvision.transforms.functional.affine(x, 0, (0, 0), 36/128, 0)
+        # Resize to 28 x 28
+        x = torchvision.transforms.functional.resize(x, (28, 28))
+        # Return the inverted intensity
         return torchvision.transforms.functional.invert(x)
 
 
@@ -48,8 +66,45 @@ def get_parser():
     parser.add_argument(
         '-momentum', help='momentum', type=float, default=0.5)
     parser.add_argument(
-        '-test_size', help='batch size for test set', type=int,  default=1)
+        '-test_size', help='batch size for test set', type=int,  default=9)
     return parser
+
+
+def evaluate(input_loader, trained_network):
+    """Evaluate the performance of the network using custom inputs loaded from input loader
+
+    Args:
+        input_loader (torch.utils.data.DataLoader): loader for custom input
+        trained_network (torch.nn): the trained nn network
+    """
+    correct = 0
+    count = 0
+    for batch_idx, (test_data, test_target) in enumerate(input_loader):
+
+        fig = plt.figure()
+        for i in range(min(9, len(test_data))):
+            output = trained_network(test_data[i])
+            # output.data is the tensor, convert to numpy array
+            output_nparray = output.data.numpy()
+            output_array = [round(elem, 2) for elem in output_nparray[0]]
+            pred = output.data.max(1, keepdim=True)[1][0][0]
+            count += 1
+            correct += pred.eq(test_target[i])
+            # Print output to the console
+            print(
+                f"10 output values: {output_array}, max idx: {pred}, correct label: {test_target[i]}")
+            # Plot the graph for each batch
+            if i < 9:
+                plt.subplot(3, 3, i+1)
+                plt.tight_layout()
+                plt.imshow(test_data[i][0], cmap='gray', interpolation='none')
+                plt.title("Prediction: {}".format(pred))
+                plt.xticks([])
+                plt.yticks([])
+        plt.show()
+    accuracy = correct * 100. / count
+    print(f'performance: {correct} / {count}, accuracy score(%) : {accuracy}')
+    return None
 
 
 def main(argv):
@@ -94,25 +149,9 @@ def main(argv):
                                                                                    ImgTransform(),
                                                                                    torchvision.transforms.Normalize(
                                              (0.1307,), (0.3081,))])), batch_size=batch_size_test, shuffle=True)
-    input_samples = enumerate(input_loader)
-    batch_idx, (test_data, test_target) = next(input_samples)
-    fig = plt.figure()
-    for i in range(len(input_loader.dataset)):
-        output = trained_network(test_data[i])
-        # output.data is the tensor, convert to numpy array
-        output_nparray = output.data.numpy()
-        output_array = [round(elem, 2) for elem in output_nparray[0]]
-        pred = output.data.max(1, keepdim=True)[1][0][0]
-        print(
-            f"10 output values: {output_array}, max idx: {pred}, correct label: {test_target[i]}")
-        if i < 9:
-            plt.subplot(3, 3, i+1)
-            plt.tight_layout()
-            plt.imshow(test_data[i][0], cmap='gray', interpolation='none')
-            plt.title("Prediction: {}".format(pred))
-            plt.xticks([])
-            plt.yticks([])
-    plt.show()
+
+    # Evaluate the performance
+    evaluate(input_loader, trained_network)
     return None
 
 

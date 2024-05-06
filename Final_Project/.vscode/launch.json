@@ -1,0 +1,28 @@
+{
+    // Use IntelliSense to learn about possible attributes.
+    // Hover to view descriptions of existing attributes.
+    // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "Python: Current File",
+            "type": "python",
+            "request": "launch",
+            "program": "${file}",
+            "console": "integratedTerminal",
+            "args": [
+                //"--help"
+                "-save", "C:/CS5330_Assets/FP/leafsnap-dataset/dataset/images/files/",
+                "-dir_model", "C:/CS5330_Assets/FP/leafsnap-dataset/dataset/trial_2023_12_11_full/results_resnet_2/",
+                "-nepochs","10",
+                "-model", "Resnet50",
+                "-test_int", "1",
+                "-target_size","224",
+                "--no-grayscale",
+                "--no-training"
+
+            ],
+            "justMyCode": true
+        }
+    ]
+}
