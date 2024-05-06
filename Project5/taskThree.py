@@ -54,13 +54,27 @@ class MyNetwork(nn.Module):
 
 
 class GreekTransform:
+    """class to transform the new images
+    """
+
     def __init__(self):
+        """Default constructor
+        """
         pass
 
     def __call__(self, x):
+        """Operations when called
+
+        Args:
+            x (array): representation of input image
+
+        Returns:
+            array: representation of output image
+        """
         x = torchvision.transforms.functional.rgb_to_grayscale(x)
+        x = torchvision.transforms.functional.resize(x, (128, 128))
         x = torchvision.transforms.functional.affine(x, 0, (0, 0), 36/128, 0)
-        x = torchvision.transforms.functional.resize(x, (28, 28))
+        x = torchvision.transforms.functional.center_crop(x, (28, 28))
         return torchvision.transforms.functional.invert(x)
 
 
@@ -99,18 +113,10 @@ def train_network(network, optimizer, save_path, train_loader, epoch, log_interv
 
         # Log interval data
         if batch_idx % log_interval == 0:
-            """
-            print('Train Epoch: {} [{}/{} ({:.0f}%)]\tLoss: {:.6f}'.format(
-                epoch, batch_idx * len(data), len(train_loader.dataset),
-                100. * batch_idx / len(train_loader), loss.item()))
-            """
             train_losses.append(loss.item())
             train_counter.append(
                 (batch_idx*5) + ((epoch-1)*len(train_loader.dataset)))
-            torch.save(network.state_dict(),
-                       result_save_path + 'modelGr.pth')
-            torch.save(optimizer.state_dict(),
-                       result_save_path + 'optimizerGr.pth')
+
     return None
 
 
@@ -147,13 +153,17 @@ def get_parser():
     parser = argparse.ArgumentParser(
         description="Process Command Line Arguments")
     parser.add_argument(
-        '-save', help='full absolute path of save directory for data and model')
+        '-model_dir', help='full absolute path of save directory for model')
     parser.add_argument(
-        '-nepochs', help='number of epochs', type=int, default=200)
+        '-input', help='full absolute path of input directory for images used in training')
     parser.add_argument(
-        '-train_size', help='batch size for training set', type=int,  default=64)
+        '-input_test', help='full absolute path of input directory for images used in testing')
     parser.add_argument(
-        '-test_size', help='batch size for test set', type=int,  default=1000)
+        '-nepochs', help='number of epochs', type=int, default=10000)
+    parser.add_argument(
+        '-train_size', help='batch size for training set', type=int,  default=5)
+    parser.add_argument(
+        '-test_size', help='batch size for test set', type=int,  default=9)
     parser.add_argument(
         '-lrate', help='learning rate', type=float, default=0.01)
     parser.add_argument(
@@ -204,6 +214,43 @@ def plot_performance(train_losses, train_counter, test_losses, test_counter):
     plt.show()
 
 
+def evaluate(input_loader, trained_network):
+    """Evaluate the performance of the network using custom inputs loaded from input loader
+
+    Args:
+        input_loader (torch.utils.data.DataLoader): loader for custom input
+        trained_network (torch.nn): the trained nn network
+    """
+    correct = 0
+    count = 0
+    for batch_idx, (test_data, test_target) in enumerate(input_loader):
+
+        plt.figure()
+        for i in range(min(9, len(test_data))):
+            output = trained_network(test_data[i])
+            # output.data is the tensor, convert to numpy array
+            output_nparray = output.data.numpy()
+            output_array = [round(elem, 2) for elem in output_nparray[0]]
+            pred = output.data.max(1, keepdim=True)[1][0][0]
+            count += 1
+            correct += pred.eq(test_target[i])
+            # Print output to the console
+            print(
+                f"10 output values: {output_array}, max idx: {pred}, correct label: {test_target[i]}")
+            # Plot the graph for each batch
+            if i < 9:
+                plt.subplot(3, 3, i+1)
+                plt.tight_layout()
+                plt.imshow(test_data[i][0], cmap='gray', interpolation='none')
+                plt.title("Prediction: {}".format(pred))
+                plt.xticks([])
+                plt.yticks([])
+        plt.show()
+    accuracy = correct * 100. / count
+    print(f'performance: {correct} / {count}, accuracy score(%) : {accuracy}')
+    return None
+
+
 def main(argv):
     """
     Main Function, contains the main logic to run the training program
@@ -212,8 +259,9 @@ def main(argv):
     parser = get_parser()
     args = parser.parse_args()
     # print(args)
-    save_path = args.save
-
+    save_path = args.model_dir
+    input_path = args.input
+    test_input_path = args.input_test
     n_epochs = args.nepochs
     batch_size_train = args.train_size
     batch_size_test = args.test_size
@@ -226,20 +274,18 @@ def main(argv):
     torch.manual_seed(random_seed)
 
     # Load the data set
-    data_save_path = save_path + "/files/greek_train/"
-    if not os.path.exists(data_save_path):
-        os.makedirs(data_save_path)
-     # DataLoader for the Greek data set
+    # DataLoader for the Greek data set
     greek_train = torch.utils.data.DataLoader(
-        torchvision.datasets.ImageFolder(data_save_path,
+        torchvision.datasets.ImageFolder(input_path,
                                          transform=torchvision.transforms.Compose([torchvision.transforms.ToTensor(),
                                                                                    GreekTransform(),
                                                                                    torchvision.transforms.Normalize(
                                              (0.1307,), (0.3081,))])),
-        batch_size=27,
+        batch_size=batch_size_train,
         shuffle=True)
-    # show_example(loader=greek_train)
 
+    # Show some example from the train loader
+    show_example(loader=greek_train)
     # Initialize the network, optimizer, and arrays to store train_loss, train_counter
     # Check if path exist
     result_save_path = save_path + "/results/"
@@ -249,6 +295,8 @@ def main(argv):
 
     # Initialize the network and optimizer
     trained_network = MyNetwork()
+    trained_optimizer = optim.SGD(
+        trained_network.parameters(), lr=learning_rate, momentum=momentum)
 
     # Load the pretrained model
     network_state_dict = torch.load(result_save_path + "model.pth")
@@ -257,15 +305,13 @@ def main(argv):
     trained_optimizer.load_state_dict(optimizer_state_dict)
 
     # freezes the parameters for the whole network
-    for name, param in trained_network.named_parameters():
-        # print(param.)
+    for param in trained_network.parameters():
         param.requires_grad = False
 
     # Replace the last classification layer
     trained_network.fc2 = nn.Linear(50, 3)
-    trained_optimizer = optim.SGD(
-        trained_network.parameters(), lr=learning_rate, momentum=momentum)
 
+    # Initialize arrays required to store the result
     train_losses = []
     train_counter = []
     test_losses = []
@@ -277,14 +323,32 @@ def main(argv):
         # Train the network
         train_network(trained_network, trained_optimizer, save_path,
                       greek_train, epoch, log_interval, train_losses, train_counter)
-        if epoch % 100 == 0:
-            # Get test result every 100 loops
-            correct = test_network(trained_network, greek_train, test_losses)
-            # if correct == len(greek_train.dataset):
-            #    break
 
+        # Test network every 100 epoch
+        if epoch % 100 == 0:
+            correct = test_network(trained_network, greek_train, test_losses)
+            print(f"accuracy for epoch {epoch}: {correct} / 27")
+            torch.save(trained_network.state_dict(),
+                       result_save_path + 'modelGr.pth')
+            torch.save(trained_optimizer.state_dict(),
+                       result_save_path + 'optimizerGr.pth')
+
+    # Print the result and performance of the trained model
     plot_performance(train_losses, train_counter, test_losses, test_counter)
-    # print(trained_network)
+    print(trained_network)
+
+    # Load the test data set
+    greek_test = torch.utils.data.DataLoader(
+        torchvision.datasets.ImageFolder(test_input_path,
+                                         transform=torchvision.transforms.Compose([torchvision.transforms.ToTensor(),
+                                                                                   GreekTransform(),
+                                                                                   torchvision.transforms.Normalize(
+                                             (0.1307,), (0.3081,))])),
+        batch_size=batch_size_test,
+        shuffle=True)
+
+    evaluate(greek_test, trained_network)
+
     # print(trained_network.fully_connect_1.weight)
     # print(trained_network.fully_connect_2.weight)
     return
