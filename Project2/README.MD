@@ -44,13 +44,21 @@ Argv[3]		<chosen method idx to compute features for an image F>
 Argv[4]		<zoom factor to use>	
 
 Available method to compute the features are as follow: 
+
 1	Baseline Matching using 9x9 square in the middle of the image
+
 2	Histogram Matching using normalized rg chromaticity histogram of 16 bins each
+
 3	Multi-histogram Matching by separating the image into left and right half, and use a normalized rg chromaticity histogram of 16 bins each for each half
+
 4 	Texture and Color matching, by using a whole image color histogram (of 8 bins R, G, B) and the histogram of gradient magnitude image. 
+
 5	Texture and Color matching on zoomed image based on method 4. Need to supply a zoom factor between 0.1 to 1.0. 
+
 6 	Texture and Color matching, by using a whole image color histogram (of 8 bins R, G, B) and the histogram of gabor filtered image. 
+
 7	Texture and Color matching on zoomed image based on method 6. Need to supply a zoom factor between 0.1 to 1.0. 
+
 
 To search using the target Image, run the searchImg program with the following commandline arguments
 ./searchImg.exe	Argv[1] Argv[2] Argv[3] Argv[4] Argv[5] Argv[6]
